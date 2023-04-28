@@ -9,8 +9,9 @@ Clone this repository at the same hierarchy as the Hexo folder.
 ## Commands
 
 - assertImages: `node ./cmd/assertImages.js <daysAgo>`
+- setCredential: `node ./cmd/setCredential.js`
 
-### assertImages
+### `assertImages`
 
 Validate an image has EXIF(includes GPS) info or not.
 
@@ -35,6 +36,15 @@ ERROR C:\Users\<userName>\source\_posts\example\gps.jpg: has GPS info
   ]
 }
 WARN  C:\Users\<userName>\source\_posts\example2\hoge.jpg: has EXIF
+```
+
+### `setCredential`
+
+Set credential to your keytar.
+
+```sh
+$ node ./cmd/setCredential.js
+Please input serviceName, authorName, and author's password: <serviceName> <authorName> <password>
 ```
 
 ## LICENSE
