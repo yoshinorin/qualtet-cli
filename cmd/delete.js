@@ -11,7 +11,7 @@ const contentId = process.argv[5];
 const axios = require("axios");
 const { deleteContent } = require('../lib/requests/deleteContent');
 const { invalidateCache } = require('../lib/requests/invalidateCaches');
-const { getAuthorId, getJwt } = require('../lib/auth');
+const { getAuthorId, getJwt } = require('../lib/requests/auth');
 const { getCredential } = require('../lib/getCredential');
 
 const httpClientWithNonAuth = axios.create({

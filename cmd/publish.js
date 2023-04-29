@@ -10,7 +10,7 @@ const axios = require("axios");
 const { objectsGenerator } = require('../lib/objectsGenerator');
 const { postContent } = require('../lib/requests/postContent');
 const { invalidateCache } = require('../lib/requests/invalidateCaches');
-const { getAuthorId, getJwt } = require('../lib/auth');
+const { getAuthorId, getJwt } = require('../lib/requests/auth');
 const { getCredential } = require('../lib/getCredential');
 const { validate } = require('../lib/imageValidation');
 
