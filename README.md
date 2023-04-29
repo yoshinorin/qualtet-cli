@@ -9,6 +9,7 @@ Clone this repository at the same hierarchy as the Hexo folder.
 ## Commands
 
 - assertImages: `node ./cmd/assertImages.js <daysAgo>`
+- delete: `node ./cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>`
 - invalidateCaches: `node ./cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>`
 - publish: `node ./cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>`
 - setCredential: `node ./cmd/setCredential.js`
@@ -38,6 +39,14 @@ ERROR C:\Users\<userName>\source\_posts\example\gps.jpg: has GPS info
   ]
 }
 WARN  C:\Users\<userName>\source\_posts\example2\hoge.jpg: has EXIF
+```
+
+### `delete`
+
+Delete content (post or page) by its id.
+
+```sh
+$ node ./cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>
 ```
 
 ### `invalidateCaches`
