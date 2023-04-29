@@ -8,7 +8,7 @@ const service = process.argv[3];
 const authorName = process.argv[4];
 
 const axios = require("axios");
-const { invalidateCache } = require('../lib/invalidateCache');
+const { invalidateCache } = require('../lib/requests/invalidateCaches');
 const { getCredential, getAuthorId, getJwt } = require('../lib/auth');
 
 const httpClientWithNonAuth = axios.create({

@@ -9,8 +9,8 @@ const authorName = process.argv[4];
 const tagId = process.argv[5];
 
 const axios = require("axios");
-const { deleteTagRequest } = require('../lib/deleteTagRequest');
-const { invalidateCache } = require('../lib/invalidateCache');
+const { deleteTagRequest } = require('../lib/requests/deleteTag');
+const { invalidateCache } = require('../lib/requests/invalidateCaches');
 const { getCredential, getAuthorId, getJwt } = require('../lib/auth');
 
 const httpClientWithNonAuth = axios.create({

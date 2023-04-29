@@ -8,8 +8,8 @@ const log = require('hexo-log').default({
 });
 const axios = require("axios");
 const { objectsGenerator } = require('../lib/objectsGenerator');
-const { postContent } = require('../lib/postContent');
-const { invalidateCache } = require('../lib/invalidateCache');
+const { postContent } = require('../lib/requests/postContent');
+const { invalidateCache } = require('../lib/requests/invalidateCaches');
 const { getCredential, getAuthorId, getJwt } = require('../lib/auth');
 const { validate } = require('../lib/imageValidation');
 
