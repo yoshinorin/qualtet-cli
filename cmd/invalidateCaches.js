@@ -7,33 +7,18 @@ const API_URL = process.argv[2];
 const service = process.argv[3];
 const authorName = process.argv[4];
 
-const axios = require("axios");
+const { httpClientWithNonAuth, httpClientWithAuth } = require('../lib/httpClients');
 const { invalidateCache } = require('../lib/requests/invalidateCaches');
 const { getAuthorId, getJwt } = require('../lib/requests/auth');
 const { getCredential } = require('../lib/getCredential');
 
-const httpClientWithNonAuth = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  }
-});
-
 (async () => {
   const password = getCredential(service, authorName)
-  const author = getAuthorId(httpClientWithNonAuth, authorName)
-  const token = await getJwt(httpClientWithNonAuth, author, password)
-
-  const httpClientWithAuth = axios.create({
-    baseURL: API_URL,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    }
-  });
+  const author = getAuthorId(httpClientWithNonAuth(API_URL), authorName)
+  const token = await getJwt(httpClientWithNonAuth(API_URL), author, password)
 
   try {
-    invalidateCache(httpClientWithAuth);
+    invalidateCache(httpClientWithAuth(API_URL, token));
     log.info(`caches: invalidated`);
   } catch(err) {
     log.error(err);
