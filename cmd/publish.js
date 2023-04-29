@@ -30,8 +30,6 @@ const httpClientWithNonAuth = axios.create({
   const author = getAuthorId(httpClientWithNonAuth, authorName)
   const token = await getJwt(httpClientWithNonAuth, author, password)
 
-  log.info(token);
-
   const httpClientWithAuth = axios.create({
     baseURL: API_URL,
     headers: {
