@@ -9,6 +9,7 @@ Clone this repository at the same hierarchy as the Hexo folder.
 ## Commands
 
 - assertImages: `node ./cmd/assertImages.js <daysAgo>`
+- invalidateCaches: `node ./cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>`
 - setCredential: `node ./cmd/setCredential.js`
 
 ### `assertImages`
@@ -36,6 +37,15 @@ ERROR C:\Users\<userName>\source\_posts\example\gps.jpg: has GPS info
   ]
 }
 WARN  C:\Users\<userName>\source\_posts\example2\hoge.jpg: has EXIF
+```
+
+### `invalidateCaches`
+
+Invalidate Cache.
+
+```
+$ node ./cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>
+INFO  caches: invalidated
 ```
 
 ### `setCredential`
