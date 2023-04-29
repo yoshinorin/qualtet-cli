@@ -1,6 +1,6 @@
 # Qualtet-CLI
 
-The cli for [Qualtet](https://github.com/yoshinorin/qualtet).
+The cli for [Qualtet](https://github.com/yoshinorin/qualtet). A set of wrappers that call the APIs of [Hexo](https://github.com/hexojs/hexo) and [Qualtet](https://github.com/yoshinorin/qualtet).
 
 ## Setup
 
@@ -8,19 +8,19 @@ Clone this repository at the same hierarchy as the Hexo folder.
 
 ## Commands
 
-- assertImages: `node ./cmd/assertImages.js <daysAgo>`
-- delete: `node ./cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>`
-- deleteTag: `node ./cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>`
-- invalidateCaches: `node ./cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>`
-- publish: `node ./cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>`
-- setCredential: `node ./cmd/setCredential.js`
+- assertImages: `node ./qualtet-cli/cmd/assertImages.js <daysAgo>`
+- delete: `node ./qualtet-cli/cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>`
+- deleteTag: `node ./qualtet-cli/cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>`
+- invalidateCaches: `node ./qualtet-cli/cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>`
+- publish: `node ./qualtet-cli/cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>`
+- setCredential: `node ./qualtet-cli/cmd/setCredential.js`
 
 ### `assertImages`
 
 Validate an image has EXIF(includes GPS) info or not.
 
 ```sh
-$ node ./cmd/assertImages.js <daysAgo (default: 10000)>
+$ node ./qualtet-cli/cmd/assertImages.js <daysAgo (default: 10000)>
 
 INFO  check updated in 10000 days ago articles assets.
 INFO  Validating config
@@ -47,7 +47,7 @@ WARN  C:\Users\<userName>\source\_posts\example2\hoge.jpg: has EXIF
 Delete content (post or page) by its id.
 
 ```sh
-$ node ./cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>
+$ node ./qualtet-cli/cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>
 ```
 
 ### `deleteTag`
@@ -55,7 +55,7 @@ $ node ./cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>
 Delete tag by its id.
 
 ```sh
-$ node ./cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>
+$ node ./qualtet-cli/cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>
 ```
 
 ### `invalidateCaches`
@@ -63,7 +63,7 @@ $ node ./cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>
 Invalidate Cache.
 
 ```
-$ node ./cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>
+$ node ./qualtet-cli/cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>
 INFO  caches: invalidated
 ```
 
@@ -72,7 +72,7 @@ INFO  caches: invalidated
 Publish articles (posts or pages) that have been updated up to n days ago.
 
 ```sh
-$ node ./cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>
+$ node ./qualtet-cli/cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>
 INFO  caches: invalidated
 INFO  Validating config
 INFO  Start processing
@@ -87,7 +87,7 @@ INFO  created - 3: 01gs876n2adwaznhv6m0yz8drw - /articles/example3/
 Set credential to your keytar.
 
 ```sh
-$ node ./cmd/setCredential.js
+$ node ./qualtet-cli/cmd/setCredential.js
 Please input serviceName, authorName, and author's password: <serviceName> <authorName> <password>
 ```
 
