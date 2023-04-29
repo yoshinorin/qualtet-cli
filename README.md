@@ -10,6 +10,7 @@ Clone this repository at the same hierarchy as the Hexo folder.
 
 - assertImages: `node ./cmd/assertImages.js <daysAgo>`
 - delete: `node ./cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>`
+- deleteTag: `node ./cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>`
 - invalidateCaches: `node ./cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>`
 - publish: `node ./cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>`
 - setCredential: `node ./cmd/setCredential.js`
@@ -47,6 +48,14 @@ Delete content (post or page) by its id.
 
 ```sh
 $ node ./cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>
+```
+
+### `deleteTag`
+
+Delete tag by its id.
+
+```sh
+$ node ./cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>
 ```
 
 ### `invalidateCaches`
