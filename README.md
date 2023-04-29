@@ -10,6 +10,7 @@ Clone this repository at the same hierarchy as the Hexo folder.
 
 - assertImages: `node ./cmd/assertImages.js <daysAgo>`
 - invalidateCaches: `node ./cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>`
+- publish: `node ./cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>`
 - setCredential: `node ./cmd/setCredential.js`
 
 ### `assertImages`
@@ -46,6 +47,21 @@ Invalidate Cache.
 ```
 $ node ./cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>
 INFO  caches: invalidated
+```
+
+### `publish`
+
+Publish articles (posts or pages) that have been updated up to n days ago.
+
+```sh
+$ node ./cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>
+INFO  caches: invalidated
+INFO  Validating config
+INFO  Start processing
+INFO  created - 1: 01gz702w32kxdhe8417fxcybcm - /example
+INFO  created - 2: 01gs876d3rmembfhnt9qskwz9a - /articles/example2/
+INFO  created - 3: 01gs876n2adwaznhv6m0yz8drw - /articles/example3/
+...
 ```
 
 ### `setCredential`
