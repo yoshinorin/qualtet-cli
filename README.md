@@ -12,6 +12,7 @@ Clone this repository at the same hierarchy as the Hexo folder.
 - delete: `node ./qualtet-cli/cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>`
 - deleteTag: `node ./qualtet-cli/cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>`
 - invalidateCaches: `node ./qualtet-cli/cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>`
+- postSeriesFromFile: `node ./qualtet-cli/cmd/postSeriesFromFile.js <apiUrl> <serviceName> <authorName> <JSON filePath>`
 - publish: `node ./qualtet-cli/cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>`
 - setCredential: `node ./qualtet-cli/cmd/setCredential.js`
 
@@ -65,6 +66,21 @@ Invalidate Cache.
 ```
 $ node ./qualtet-cli/cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>
 INFO  caches: invalidated
+```
+
+### `postSeriesFromFile`
+
+Create or Update series from JSON file.
+
+```
+$ node ./qualtet-cli/cmd/postSeriesFromFile.js <apiUrl> <serviceName> <authorName> <JSON filePath>`
+
+// example JSON
+{
+  "path": "example",
+  "title": "example title",
+  "description": "example description"
+}
 ```
 
 ### `publish`
