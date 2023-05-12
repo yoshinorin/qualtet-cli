@@ -77,7 +77,7 @@ $ node ./qualtet-cli/cmd/postSeriesFromFile.js <apiUrl> <serviceName> <authorNam
 
 // example JSON
 {
-  "path": "example",
+  "name": "example",
   "title": "example title",
   "description": "example description"
 }
