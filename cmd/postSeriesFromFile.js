@@ -22,7 +22,9 @@ const fs = require("fs");
 
   try {
     const series = fs.readFileSync(filePath, 'utf-8');
-    const result = postSeries(httpClientWithAuth(API_URL, token), series)
+    JSON.parse(series).forEach(s => {
+      postSeries(httpClientWithAuth(API_URL, token), s);
+    });
     invalidateCache(httpClientWithAuth(API_URL, token));
     log.info(`caches: invalidated`);
   } catch(err) {
