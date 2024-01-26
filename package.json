@@ -11,7 +11,7 @@
     "axios": "1.6.2",
     "exifreader": "4.17.0",
     "fs-extra": "11.1.1",
-    "hexo": "7.0.0",
+    "hexo": "7.1.1",
     "hexo-log": "4.1.0",
     "hexo-util": "3.1.0",
     "keytar": "7.9.0",
