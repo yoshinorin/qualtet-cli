@@ -8,15 +8,15 @@
   },
   "author": "yoshinorin",
   "dependencies": {
-    "axios": "1.6.2",
-    "exifreader": "4.17.0",
-    "fs-extra": "11.1.1",
+    "axios": "1.7.7",
+    "exifreader": "4.23.5",
+    "fs-extra": "11.2.0",
     "hexo": "7.3.0",
     "hexo-log": "4.1.0",
     "hexo-util": "3.3.0",
     "keytar": "7.9.0",
     "markdown-it": "13.0.2",
     "markdown-it-footnote": "3.0.3",
-    "micromatch": "4.0.5"
+    "micromatch": "4.0.8"
   }
 }
