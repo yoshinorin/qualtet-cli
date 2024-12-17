@@ -8,13 +8,12 @@ extern crate napi_derive;
 
 fn credential_entry(service_name: String, author_name: String) -> Result<Entry> {
   match env::consts::OS {
-      "windows" => {
-        let target = format!("{}/{}", service_name, author_name);
-        Entry::new_with_target(&target, &service_name, &author_name)
-      }
-      _ => Entry::new(&service_name, &author_name)
+    "windows" => {
+      let target = format!("{}/{}", service_name, author_name);
+      Entry::new_with_target(&target, &service_name, &author_name)
+    }
+    _ => Entry::new(&service_name, &author_name),
   }
-
 }
 
 #[napi]
