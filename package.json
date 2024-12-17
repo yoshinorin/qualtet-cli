@@ -6,6 +6,9 @@
   "directories": {
     "lib": "lib"
   },
+  "scripts": {
+    "lint": "biome format --write ./cmd && biome format --write ./lib && biome format --write ./rust-lib/__tests__"
+  },
   "author": "yoshinorin",
   "dependencies": {
     "axios": "1.7.7",
@@ -17,5 +20,8 @@
     "markdown-it": "13.0.2",
     "markdown-it-footnote": "3.0.3",
     "micromatch": "4.0.8"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4"
   }
 }

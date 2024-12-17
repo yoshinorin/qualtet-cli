@@ -1,13 +1,16 @@
-import { setPassword } from '../rust-lib/index.js';
-import * as readline from 'node:readline';
+import { setPassword } from "../rust-lib/index.js";
+import * as readline from "node:readline";
 
 const rline = readline.createInterface({
   input: process.stdin,
-  output: process.stdout
+  output: process.stdout,
 });
 
-rline.question("Please input serviceName, authorName, and author's password: ", (x) => {
-  const inputs = x.split(' ');
-  setPassword(inputs[0], inputs[1], inputs[2]);
-  rline.close();
-});
+rline.question(
+  "Please input serviceName, authorName, and author's password: ",
+  (x) => {
+    const inputs = x.split(" ");
+    setPassword(inputs[0], inputs[1], inputs[2]);
+    rline.close();
+  },
+);
