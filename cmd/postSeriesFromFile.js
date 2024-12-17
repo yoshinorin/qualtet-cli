@@ -11,7 +11,7 @@ const filePath = process.argv[5];
 const { httpClientWithNonAuth, httpClientWithAuth } = require('../lib/httpClients');
 const { invalidateCache } = require('../lib/requests/invalidateCaches');
 const { getAuthorId, getJwt } = require('../lib/requests/auth');
-const { getCredential } = require('../lib/getCredential');
+const { getCredential } = require('../lib/getCredential.js');
 const { postSeries } = require('../lib/requests/postSeries');
 const fs = require("fs");
 

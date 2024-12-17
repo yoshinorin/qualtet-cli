@@ -12,7 +12,7 @@ const { httpClientWithNonAuth, httpClientWithAuth } = require('../lib/httpClient
 const { deleteTagRequest } = require('../lib/requests/deleteTag');
 const { invalidateCache } = require('../lib/requests/invalidateCaches');
 const { getAuthorId, getJwt } = require('../lib/requests/auth');
-const { getCredential } = require('../lib/getCredential');
+const { getCredential } = require('../lib/getCredential.js');
 
 (async () => {
   const password = getCredential(service, authorName)

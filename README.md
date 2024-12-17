@@ -2,9 +2,24 @@
 
 The cli for [Qualtet](https://github.com/yoshinorin/qualtet). A set of wrappers that call the APIs of [Hexo](https://github.com/hexojs/hexo) and [Qualtet](https://github.com/yoshinorin/qualtet).
 
+## Requirements
+
+* Node.js 22.x
+* rustup 1.27.x
+* rustc 1.83.x
+
 ## Setup
 
 Clone this repository at the same hierarchy as the Hexo folder.
+
+## Build
+
+Some parts of the code are written in Rust. Therefore, a build using [napi-rs](https://github.com/napi-rs/napi-rs) is required.
+
+```sh
+$ cd rust-lib
+$ npm run build
+```
 
 ## Commands
 

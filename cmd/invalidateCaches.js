@@ -10,7 +10,7 @@ const authorName = process.argv[4];
 const { httpClientWithNonAuth, httpClientWithAuth } = require('../lib/httpClients');
 const { invalidateCache } = require('../lib/requests/invalidateCaches');
 const { getAuthorId, getJwt } = require('../lib/requests/auth');
-const { getCredential } = require('../lib/getCredential');
+const { getCredential } = require('../lib/getCredential.js');
 
 (async () => {
   const password = getCredential(service, authorName)
