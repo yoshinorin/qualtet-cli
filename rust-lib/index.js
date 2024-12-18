@@ -310,7 +310,7 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { setPassword, getPassword } = nativeBinding
+const { setCredential, getCredential } = nativeBinding
 
-module.exports.setPassword = setPassword
-module.exports.getPassword = getPassword
+module.exports.setCredential = setCredential
+module.exports.getCredential = getCredential

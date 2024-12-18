@@ -1,4 +1,4 @@
-import { setPassword } from "../rust-lib/index.js";
+import { setPassword as setPasswordNative } from "../rust-lib/index.js";
 import * as readline from "node:readline";
 
 const rline = readline.createInterface({
@@ -10,7 +10,7 @@ rline.question(
   "Please input serviceName, authorName, and author's password: ",
   (x) => {
     const inputs = x.split(" ");
-    setPassword(inputs[0], inputs[1], inputs[2]);
+    setPasswordNative(inputs[0], inputs[1], inputs[2]);
     rline.close();
   },
 );

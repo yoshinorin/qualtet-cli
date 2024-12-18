@@ -1,8 +1,8 @@
 import { test, expect } from "vitest";
-import { setPassword, getPassword } from "../index.js";
+import { setCredential, getCredential } from "../index.js";
 
 test("set and get password", () => {
-  setPassword("hoge", "fuga", "bazbaaaaaz");
-  const password = getPassword("hoge", "fuga");
+  setCredential("hoge", "fuga", "bazbaaaaaz");
+  const password = getCredential("hoge", "fuga");
   expect(password).toEqual("bazbaaaaaz");
 });
