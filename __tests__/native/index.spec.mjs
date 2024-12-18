@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { setCredential, getCredential } from "../index.js";
+import { setCredential, getCredential } from "../../rust-lib/index.js"
 
 test("set and get password", () => {
   setCredential("hoge", "fuga", "bazbaaaaaz");

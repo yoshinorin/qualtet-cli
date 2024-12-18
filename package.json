@@ -7,7 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "lint": "biome format --write ./cmd && biome format --write ./lib && biome format --write ./rust-lib/__tests__"
+    "lint": "biome format --write ./cmd && biome format --write ./lib && biome format --write ./rust-lib/__tests__",
+    "test": "cd ./rust-lib && npm run build && cd ../ && vitest run --coverage"
   },
   "author": "yoshinorin",
   "dependencies": {
@@ -22,6 +23,8 @@
     "micromatch": "4.0.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4"
+    "@biomejs/biome": "1.9.4",
+    "@vitest/coverage-v8": "2.1.8",
+    "vitest": "2.1.8"
   }
 }

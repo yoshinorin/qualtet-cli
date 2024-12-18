@@ -16,9 +16,7 @@
     }
   },
   "devDependencies": {
-    "@napi-rs/cli": "2.18.4",
-    "@vitest/coverage-v8": "2.1.8",
-    "vitest": "2.1.8"
+    "@napi-rs/cli": "2.18.4"
   },
   "engines": {
     "node": ">= 22"
@@ -27,7 +25,6 @@
     "artifacts": "napi artifacts",
     "build": "napi build --platform --release",
     "build:debug": "napi build --platform",
-    "test": "npm run build && vitest run --coverage",
     "universal": "napi universal",
     "version": "napi version"
   }

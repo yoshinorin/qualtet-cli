@@ -13,7 +13,9 @@ export default defineConfig({
         "config.*.js",
         "*.config.js",
         "index.js",
-        "index.d.ts"
+        "index.d.ts",
+        "rust-lib/**/*.js",
+        "rust-lib/**/*.ts"
       ]
     }
   }
