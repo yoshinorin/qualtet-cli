@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "lint": "biome format --write ./cmd && biome format --write ./lib && biome format --write ./rust-lib/__tests__",
+    "lint": "biome format --write ./cmd && biome format --write ./lib",
     "test": "cd ./rust-lib && npm run build && cd ../ && vitest run --coverage"
   },
   "author": "yoshinorin",
