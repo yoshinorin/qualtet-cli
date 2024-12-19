@@ -7,8 +7,10 @@
     "lib": "lib"
   },
   "scripts": {
-    "lint": "biome format --write ./cmd && biome format --write ./lib",
-    "test": "cd ./rust-lib && npm run build && cd ../ && vitest run --coverage"
+    "fmt": "biome format --write ./cmd && biome format --write ./lib && cd ./rust-lib && npm run fmt",
+    "fmt:js": "biome format --write ./cmd && biome format --write ./lib",
+    "test": "cd ./rust-lib && npm run build && npm run test && cd ../ && vitest run --coverage",
+    "test:js": "cd ./rust-lib && npm run build && cd ../ && vitest run --coverage"
   },
   "author": "yoshinorin",
   "dependencies": {

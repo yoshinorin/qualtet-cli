@@ -26,6 +26,8 @@
     "build": "napi build --platform --release",
     "build:debug": "napi build --platform",
     "universal": "napi universal",
+    "test": "cargo test",
+    "fmt": "cargo fmt",
     "version": "napi version"
   }
 }
