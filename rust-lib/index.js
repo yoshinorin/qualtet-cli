@@ -310,8 +310,9 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { setCredential, getCredential, removeTemplateEnginesSyntax } = nativeBinding
+const { setCredential, getCredential, removeTemplateEnginesSyntax, generateRobots } = nativeBinding
 
 module.exports.setCredential = setCredential
 module.exports.getCredential = getCredential
 module.exports.removeTemplateEnginesSyntax = removeTemplateEnginesSyntax
+module.exports.generateRobots = generateRobots
