@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - LICENSE
+      - README.md
+      - '*.json'
+
+jobs:
+  build_and_test:
+    runs-on: ${{ matrix.target.os }}
+    timeout-minutes: 360
+    strategy:
+      matrix:
+        target:
+          - { name: Linux, os: ubuntu-latest, triple: linux-x64-gnu }
+          - { name: Windows, os: windows-latest, triple: x86_64-pc-windows-msvc }
+        node-version: ['22.x']
+      fail-fast: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up rust
+        run: |
+          cd rust-lib
+          rustup toolchain install 1.83.0 --profile minimal --no-self-update
+          rustup default 1.83.0-${{ matrix.target.triple }}
+          rustup --version
+          rustc --version
+          cargo --version
+      - name: Set up napi-rs
+        run: |
+          cd rust-lib
+          npm install
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install root dir dependencies
+        run: |
+          npm install
+      - name: Test
+        run: npm run test
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./report
+
+  deploy-test-report:
+    needs: build_and_test
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
