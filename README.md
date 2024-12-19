@@ -1,5 +1,7 @@
 # Qualtet-CLI
 
+[![CI(Windows Only)](https://github.com/yoshinorin/qualtet-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/yoshinorin/qualtet-cli/actions/workflows/ci.yml) <sub> [Unit Test Report(Nodejs code Only)](https://yoshinorin.github.io/qualtet-cli/coverage/) </sub>
+
 The cli for [Qualtet](https://github.com/yoshinorin/qualtet). A set of wrappers that call the APIs of [Hexo](https://github.com/hexojs/hexo) and [Qualtet](https://github.com/yoshinorin/qualtet).
 
 ## Requirements
