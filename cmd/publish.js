@@ -41,6 +41,14 @@ function generatePostContent(post, type, baseUrl) {
     return null;
   }
   return p;
+
+function responseErrorHandler(content, error) {
+  try {
+    log.error(error.response.status);
+    log.error(`error: - ${content.path}`);
+  } catch {
+    // Nothing todo
+  }
 }
 
 (async () => {
@@ -60,7 +68,6 @@ function generatePostContent(post, type, baseUrl) {
   const daysAgo = process.argv[5] ? process.argv[5] : 5;
 
   let cnt = 0;
-  let errorCnt = 0;
   hexo.init().then(() => {
     hexo.load().then(() => {
       let date = new Date();
@@ -106,13 +113,7 @@ function generatePostContent(post, type, baseUrl) {
               });
             })
             .catch((error) => {
-              try {
-                log.error(error.response.status);
-                errorCnt++;
-                log.error(`error: - ${errorCnt} ${post.path}`);
-              } catch {
-                // Nothing todo
-              }
+              responseErrorHandler(post, error);
             });
           await wait(150);
         }
@@ -151,13 +152,7 @@ function generatePostContent(post, type, baseUrl) {
               });
             })
             .catch((error) => {
-              try {
-                log.error(error.response.status);
-                errorCnt++;
-                log.error(`error: - ${errorCnt} ${post.path}`);
-              } catch {
-                // Nothing todo
-              }
+              responseErrorHandler(page, error);
             });
           await wait(150);
         }
