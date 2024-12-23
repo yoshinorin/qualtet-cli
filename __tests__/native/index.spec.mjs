@@ -1,5 +1,5 @@
 import { test, expect, describe, it } from "vitest";
-import { setCredential, getCredential, removeTemplateEnginesSyntax, generateRobots } from "../../rust-lib/index.js"
+import { setCredential, getCredential, removeTemplateEnginesSyntax, generateRobots, formatPath } from "../../rust-lib/index.js"
 import { test, expect, describe, it } from "vitest";
 
 describe("Credential Tests", () => {
@@ -38,6 +38,51 @@ describe("removeTemplateEnginesSyntax Tests", () => {
     const expectedOutput = "";
     const result = removeTemplateEnginesSyntax(input);
     expect(result).toEqual(expectedOutput);
+  });
+});
+
+describe('formatPath', () => {
+  it('should return the same path if it ends with a slash', () => {
+    const inputPath = "/example/path/";
+    const contentType = "article";
+    const expectedOutput = "/articles/example/path/";
+    expect(formatPath(inputPath, contentType)).toBe(expectedOutput);
+  });
+
+  it('should add a slash at the end if the path does not end with a slash', () => {
+    const inputPath = "/example/path";
+    const contentType = "article";
+    const expectedOutput = "/articles/example/path/";
+    expect(formatPath(inputPath, contentType)).toBe(expectedOutput);
+  });
+
+  it('should add a leading slash if the path does not start with a slash', () => {
+    const inputPath = "example/path/";
+    const contentType = "article";
+    const expectedOutput = "/articles/example/path/";
+    expect(formatPath(inputPath, contentType)).toBe(expectedOutput);
+  });
+
+  it('should add "/articles" to the path if contentType is "article" and path does not include "/articles"', () => {
+    const inputPath = "/example/path/";
+    const contentType = "article";
+    const expectedOutput = "/articles/example/path/";
+    expect(formatPath(inputPath, contentType)).toBe(expectedOutput);
+  });
+
+  it('should not add "/articles" to the path if contentType is not "article"', () => {
+    const inputPath = "/example/path/";
+    const contentType = "page";
+    const expectedOutput = "/example/path/";
+    expect(formatPath(inputPath, contentType)).toBe(expectedOutput);
+  });
+
+  // TODO: throw exception
+  it('should handle empty paths', () => {
+    const inputPath = "";
+    const contentType = "article";
+    const expectedOutput = "/articles/";
+    expect(formatPath(inputPath, contentType)).toBe(expectedOutput);
   });
 });
 

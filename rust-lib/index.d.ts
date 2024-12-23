@@ -6,4 +6,5 @@
 export declare function setCredential(serviceName: string, authorName: string, password: string): void
 export declare function getCredential(serviceName: string, authorName: string): string
 export declare function removeTemplateEnginesSyntax(text: string): string
+export declare function formatPath(path: string, contentType: string): string
 export declare function generateRobots(noindex: boolean | undefined | null, contentType: string): string

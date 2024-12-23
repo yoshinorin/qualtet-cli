@@ -2,6 +2,22 @@ pub fn remove_template_engines_syntax(text: &str) -> String {
   text.replace("{% raw %}", "").replace("{% endraw %}", "")
 }
 
+pub fn format_path(path: &str, content_type: &str) -> String {
+  let mut p: String = if path.ends_with('/') {
+    path.to_string()
+  } else {
+    format!("{}/", path)
+  };
+
+  if !p.starts_with('/') {
+    p = format!("/{}", p);
+  }
+  if content_type == "article" && !p.contains("/articles") {
+    p = format!("/articles{}", p);
+  }
+  p
+}
+
 #[cfg(test)]
 mod tests {
   use super::*;
@@ -39,5 +55,41 @@ mod tests {
     let input = "{% raw %}{% endraw %}";
     let expected = "";
     assert_eq!(remove_template_engines_syntax(input), expected);
+  }
+
+  #[test]
+  fn test_format_path() {
+    assert_eq!(
+      format_path("path/to/resource", "article"),
+      "/articles/path/to/resource/"
+    );
+    assert_eq!(
+      format_path("path/to/resource/", "article"),
+      "/articles/path/to/resource/"
+    );
+    assert_eq!(
+      format_path("/path/to/resource", "article"),
+      "/articles/path/to/resource/"
+    );
+    assert_eq!(
+      format_path("/path/to/resource/", "article"),
+      "/articles/path/to/resource/"
+    );
+    assert_eq!(
+      format_path("path/to/resource", "other"),
+      "/path/to/resource/"
+    );
+    assert_eq!(
+      format_path("path/to/resource/", "other"),
+      "/path/to/resource/"
+    );
+    assert_eq!(
+      format_path("/path/to/resource", "other"),
+      "/path/to/resource/"
+    );
+    assert_eq!(
+      format_path("/path/to/resource/", "other"),
+      "/path/to/resource/"
+    );
   }
 }
