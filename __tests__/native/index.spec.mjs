@@ -70,6 +70,20 @@ describe('formatPath', () => {
     expect(formatPath(inputPath, contentType)).toBe(expectedOutput);
   });
 
+  it('should add "/articles" to the path and remove "index.html" if the path ends with "index.html"', () => {
+    const inputPath = "/example/path/index.html";
+    const contentType = "article";
+    const expectedOutput = "/articles/example/path/";
+    expect(formatPath(inputPath, contentType)).toBe(expectedOutput);
+  });
+
+  it('should add "/articles" to the path  and remove "index.html/" if the path ends with "index.html/"', () => {
+    const inputPath = "/example/path/index.html/";
+    const contentType = "article";
+    const expectedOutput = "/articles/example/path/";
+    expect(formatPath(inputPath, contentType)).toBe(expectedOutput);
+  });
+
   it('should not add "/articles" to the path if contentType is not "article"', () => {
     const inputPath = "/example/path/";
     const contentType = "page";

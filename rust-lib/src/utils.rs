@@ -11,6 +11,13 @@ pub fn format_path(path: &str, content_type: &str) -> String {
     format!("{}/", path)
   };
 
+  if let Some(index) = p.rfind(".html/") {
+    let prefix = &p[..index];
+    if let Some(slash_index) = prefix.rfind('/') {
+      p = format!("{}", &prefix[..=slash_index]);
+    }
+  }
+
   if !p.starts_with('/') {
     p = format!("/{}", p);
   }
@@ -72,6 +79,14 @@ mod tests {
   fn test_format_path() {
     assert_eq!(
       format_path("path/to/resource", "article"),
+      "/articles/path/to/resource/"
+    );
+    assert_eq!(
+      format_path("path/to/resource/index.html", "article"),
+      "/articles/path/to/resource/"
+    );
+    assert_eq!(
+      format_path("path/to/resource/index.html/", "article"),
       "/articles/path/to/resource/"
     );
     assert_eq!(
