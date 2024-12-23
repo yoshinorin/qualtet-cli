@@ -7,6 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
+    "build": "cd ./rust-lib && npm run build",
     "fmt": "biome format --write ./cmd && biome format --write ./lib && cd ./rust-lib && npm run fmt",
     "fmt:js": "biome format --write ./cmd && biome format --write ./lib",
     "test": "cd ./rust-lib && npm run build && npm run test && cd ../ && vitest run --coverage",
