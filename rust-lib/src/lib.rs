@@ -1,4 +1,5 @@
 mod credential;
+mod markdown;
 mod robots;
 mod utils;
 
@@ -38,4 +39,10 @@ pub fn generate_robots(noindex: Option<bool>, content_type: String) -> napi::Res
   let noindex = noindex.unwrap_or(false);
   let s = robots::generate_robots(noindex, &content_type);
   Ok(s.to_string())
+}
+
+#[napi]
+pub fn render_markdown(input: String) -> napi::Result<String> {
+  let s = markdown::render(&input);
+  Ok(s)
 }
