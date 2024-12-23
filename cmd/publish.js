@@ -32,15 +32,16 @@ const SKIP_PATHS = [
   "_drafts/**",
 ];
 
-function generatePostContent(post, type, baseUrl) {
-  if (shouldSkipPaths(post.path, SKIP_PATHS)) {
+function generatePostContent(content, type, baseUrl) {
+  if (shouldSkipPaths(content.path, SKIP_PATHS)) {
     return null;
   }
-  const p = objectsGenerator(post, type, baseUrl);
-  if (!p) {
+  const generatedContent = objectsGenerator(content, type, baseUrl);
+  if (!generatedContent) {
     return null;
   }
-  return p;
+  return generatedContent;
+}
 
 function responseErrorHandler(content, error) {
   try {
