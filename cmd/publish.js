@@ -92,25 +92,25 @@ function responseErrorHandler(content, error) {
                 `created - ${cnt}: ${response.data.id} - ${response.data.path}`,
               );
               const assets = postAsset.find({ post: post._id }).toArray();
-              assets.forEach((a) => {
-                validate(a.source);
-                // TODO: validate image
-                //if (validate(a.source)) {
-                fs.copy(
-                  a.source,
-                  join(
-                    hexo.base_dir,
-                    "_staticContentAssets",
-                    "articles",
-                    a.path,
-                  ),
-                  (err) => {
-                    if (err) {
-                      log.error(err);
-                    }
-                  },
-                );
-                //}
+              assets.forEach(async (a) => {
+                if (await validate(a.source)) {
+                  fs.copy(
+                    a.source,
+                    join(
+                      hexo.base_dir,
+                      "_staticContentAssets",
+                      "articles",
+                      a.path,
+                    ),
+                    (err) => {
+                      if (err) {
+                        log.error(err);
+                      }
+                    },
+                  );
+                } else {
+                  log.error(`image copy skipped - : ${content.path}`);
+                }
               });
             })
             .catch((error) => {
@@ -137,19 +137,20 @@ function responseErrorHandler(content, error) {
               );
               const pageDir = page.path.slice(0, page.path.lastIndexOf("/"));
               const assets = pageAsset.filter((x) => x._id.includes(pageDir));
-              assets.forEach((a) => {
-                // TODO: validate image
-                // if (validate(a.source)) {
-                fs.copy(
-                  a.source,
-                  join(hexo.base_dir, "_staticContentAssets", a.path),
-                  (err) => {
-                    if (err) {
-                      log.error(err);
-                    }
-                  },
-                );
-                // }
+              assets.forEach(async (a) => {
+                if (await validate(a.source)) {
+                  fs.copy(
+                    a.source,
+                    join(hexo.base_dir, "_staticContentAssets", a.path),
+                    (err) => {
+                      if (err) {
+                        log.error(err);
+                      }
+                    },
+                  );
+                } else {
+                  log.error(`image copy skipped - : ${content.path}`);
+                }
               });
             })
             .catch((error) => {
