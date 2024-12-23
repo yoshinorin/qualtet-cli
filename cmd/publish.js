@@ -52,6 +52,22 @@ function responseErrorHandler(content, error) {
   }
 }
 
+function copyAssetsIfValid(assets, dest) {
+  assets.forEach((a) => {
+    validate(a.source).then((response) => {
+      if (response) {
+        fs.copy(a.source, dest, (err) => {
+          if (err) {
+            log.error(err);
+          }
+        });
+      } else {
+        log.error(`image copy skipped - : ${a.path}`);
+      }
+    });
+  });
+}
+
 (async () => {
   const password = getCredential(service, authorName);
   const author = getAuthorId(httpClientWithNonAuth(API_URL), authorName);
@@ -91,27 +107,18 @@ function responseErrorHandler(content, error) {
               log.info(
                 `created - ${cnt}: ${response.data.id} - ${response.data.path}`,
               );
-              const assets = postAsset.find({ post: post._id }).toArray();
-              assets.forEach(async (a) => {
-                if (await validate(a.source)) {
-                  fs.copy(
-                    a.source,
-                    join(
-                      hexo.base_dir,
-                      "_staticContentAssets",
-                      "articles",
-                      a.path,
-                    ),
-                    (err) => {
-                      if (err) {
-                        log.error(err);
-                      }
-                    },
-                  );
-                } else {
-                  log.error(`image copy skipped - : ${content.path}`);
-                }
-              });
+              return postAsset.find({ post: post._id }).toArray();
+            })
+            .then((assets) => {
+              copyAssetsIfValid(
+                assets,
+                join(
+                  hexo.base_dir,
+                  "_staticContentAssets",
+                  "articles",
+                  post.path,
+                ),
+              );
             })
             .catch((error) => {
               responseErrorHandler(post, error);
@@ -136,22 +143,13 @@ function responseErrorHandler(content, error) {
                 `created - ${cnt}: ${response.data.id} - ${response.data.path}`,
               );
               const pageDir = page.path.slice(0, page.path.lastIndexOf("/"));
-              const assets = pageAsset.filter((x) => x._id.includes(pageDir));
-              assets.forEach(async (a) => {
-                if (await validate(a.source)) {
-                  fs.copy(
-                    a.source,
-                    join(hexo.base_dir, "_staticContentAssets", a.path),
-                    (err) => {
-                      if (err) {
-                        log.error(err);
-                      }
-                    },
-                  );
-                } else {
-                  log.error(`image copy skipped - : ${content.path}`);
-                }
-              });
+              return pageAsset.filter((x) => x._id.includes(pageDir));
+            })
+            .then((assets) => {
+              copyAssetsIfValid(
+                assets,
+                join(hexo.base_dir, "_staticContentAssets", page.path),
+              );
             })
             .catch((error) => {
               responseErrorHandler(page, error);
