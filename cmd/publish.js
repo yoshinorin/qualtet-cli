@@ -32,6 +32,17 @@ const SKIP_PATHS = [
   "_drafts/**",
 ];
 
+function generatePostContent(post, type, baseUrl) {
+  if (shouldSkipPaths(post.path, SKIP_PATHS)) {
+    return null;
+  }
+  const p = objectsGenerator(post, type, baseUrl);
+  if (!p) {
+    return null;
+  }
+  return p;
+}
+
 (async () => {
   const password = getCredential(service, authorName);
   const author = getAuthorId(httpClientWithNonAuth(API_URL), authorName);
@@ -62,14 +73,11 @@ const SKIP_PATHS = [
       (async () => {
         const posts = hexo.locals.get("posts").filter((c) => c.updated > date);
         for (let post of posts.toArray()) {
-          if (shouldSkipPaths(post.path, SKIP_PATHS)) {
+          const content = generatePostContent(post, "article", url);
+          if (content == null) {
             continue;
           }
-          const p = objectsGenerator(post, "article", url);
-          if (!p) {
-            continue;
-          }
-          postContent(httpClientWithAuth(API_URL, token), p)
+          postContent(httpClientWithAuth(API_URL, token), content)
             .then((response) => {
               cnt++;
               log.info(
@@ -115,14 +123,11 @@ const SKIP_PATHS = [
         // TODO: excludes scaffolds
         const pages = hexo.locals.get("pages").filter((c) => c.updated > date);
         for (let page of pages.toArray()) {
-          if (shouldSkipPaths(post.path, SKIP_PATHS)) {
+          const content = generatePostContent(page, "page", url);
+          if (content == null) {
             continue;
           }
-          const p = objectsGenerator(page, "page", url);
-          if (!p) {
-            continue;
-          }
-          postContent(httpClientWithAuth(API_URL, token), p)
+          postContent(httpClientWithAuth(API_URL, token), content)
             .then((response) => {
               cnt++;
               log.info(
