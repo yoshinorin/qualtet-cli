@@ -1,5 +1,5 @@
 import { test, expect, describe, it } from "vitest";
-import { setCredential, getCredential, removeTemplateEnginesSyntax, generateRobots, formatPath } from "../../rust-lib/index.js"
+import { setCredential, getCredential, removeTemplateEnginesSyntax, generateRobots, formatPath, shouldSkipPaths } from "../../rust-lib/index.js"
 import { test, expect, describe, it } from "vitest";
 
 describe("Credential Tests", () => {
@@ -104,5 +104,51 @@ describe('generateRobots', () => {
 
   it('should return "noarchive, noimageindex" if contentType is "article" and noindex is null', () => {
     expect(generateRobots(null, "article")).toBe("noarchive, noimageindex");
+  });
+});
+
+describe('shouldSkipPaths', () => {
+  const skipPaths = [
+    "temp/**",
+    "temp/**/hoge.md",
+    "_drafts/**",
+    "*.tmp",
+    "**/temp",
+  ];
+
+  it('should return true for paths that match skip patterns', () => {
+    expect(shouldSkipPaths("temp/some-path", skipPaths)).toBe(true);
+  });
+
+  it('should return true for specific file paths that match skip patterns', () => {
+    expect(shouldSkipPaths("temp/foo/hoge.md", skipPaths)).toBe(true);
+  });
+
+  it('should return true for paths in _drafts', () => {
+    expect(shouldSkipPaths("_drafts/some-path", skipPaths)).toBe(true);
+  });
+
+  it('should return true for paths with trailing slashes that match skip patterns', () => {
+    expect(shouldSkipPaths("_drafts/some-path/bar.md", skipPaths)).toBe(true);
+  });
+
+  it('should return true for paths with leading slashes that match skip patterns', () => {
+    expect(shouldSkipPaths("some-file.tmp", skipPaths)).toBe(true);
+  });
+
+  it('should return true for paths ending with skip patterns', () => {
+    expect(shouldSkipPaths("some/path/temp", skipPaths)).toBe(true);
+  });
+
+  it('should return false for paths that do not match skip patterns', () => {
+    expect(shouldSkipPaths("some-other-path", skipPaths)).toBe(false);
+  });
+
+  it('should return false for specific file paths that do not match skip patterns', () => {
+    expect(shouldSkipPaths("some-other-path/hoge.md", skipPaths)).toBe(false);
+  });
+
+  it('should return false for paths that do not match any skip patterns', () => {
+    expect(shouldSkipPaths("hoge.md", skipPaths)).toBe(false);
   });
 });

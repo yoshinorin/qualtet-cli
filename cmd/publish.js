@@ -17,10 +17,20 @@ const { invalidateCache } = require("../lib/requests/invalidateCaches");
 const { getAuthorId, getJwt } = require("../lib/requests/auth");
 const { getCredential } = require("../lib/getCredential.js");
 const { validate } = require("../lib/imageValidation");
+const { shouldSkipPaths } = require("../rust-lib/index.js");
 
 const API_URL = process.argv[2];
 const service = process.argv[3];
 const authorName = process.argv[4];
+
+const SKIP_PATHS = [
+  "temp/**",
+  "all-categories/**",
+  "all-archives/**",
+  "scaffolds/**",
+  "404/**",
+  "_drafts/**",
+];
 
 (async () => {
   const password = getCredential(service, authorName);
@@ -52,6 +62,9 @@ const authorName = process.argv[4];
       (async () => {
         const posts = hexo.locals.get("posts").filter((c) => c.updated > date);
         for (let post of posts.toArray()) {
+          if (shouldSkipPaths(post.path, SKIP_PATHS)) {
+            continue;
+          }
           const p = objectsGenerator(post, "article", url);
           if (!p) {
             continue;
@@ -102,6 +115,9 @@ const authorName = process.argv[4];
         // TODO: excludes scaffolds
         const pages = hexo.locals.get("pages").filter((c) => c.updated > date);
         for (let page of pages.toArray()) {
+          if (shouldSkipPaths(post.path, SKIP_PATHS)) {
+            continue;
+          }
           const p = objectsGenerator(page, "page", url);
           if (!p) {
             continue;

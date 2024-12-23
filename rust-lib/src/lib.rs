@@ -35,6 +35,13 @@ pub fn format_path(path: String, content_type: String) -> napi::Result<String> {
 }
 
 #[napi]
+pub fn should_skip_paths(path: String, skip_paths: Vec<String>) -> napi::Result<bool> {
+  let skip_paths: Vec<&str> = skip_paths.iter().map(|s| s.as_str()).collect();
+  let b = utils::should_skip_paths(&path, &skip_paths);
+  Ok(b)
+}
+
+#[napi]
 pub fn generate_robots(noindex: Option<bool>, content_type: String) -> napi::Result<String> {
   let noindex = noindex.unwrap_or(false);
   let s = robots::generate_robots(noindex, &content_type);

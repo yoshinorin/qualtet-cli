@@ -1,3 +1,5 @@
+use glob_match::glob_match;
+
 pub fn remove_template_engines_syntax(text: &str) -> String {
   text.replace("{% raw %}", "").replace("{% endraw %}", "")
 }
@@ -16,6 +18,15 @@ pub fn format_path(path: &str, content_type: &str) -> String {
     p = format!("/articles{}", p);
   }
   p
+}
+
+pub fn should_skip_paths(path: &str, skip_paths: &[&str]) -> bool {
+  for skip_path in skip_paths {
+    if glob_match(skip_path, path) {
+      return true;
+    }
+  }
+  false
 }
 
 #[cfg(test)]
@@ -91,5 +102,24 @@ mod tests {
       format_path("/path/to/resource/", "other"),
       "/path/to/resource/"
     );
+  }
+
+  #[test]
+  fn test_should_skip_paths() {
+    let skip_paths = [
+      "temp/**",
+      "temp/**/hoge.md",
+      "_drafts/**",
+      "*.tmp",
+      "**/temp",
+    ];
+
+    assert!(should_skip_paths("temp/some-path", &skip_paths));
+    assert!(should_skip_paths("temp/foo/hoge.md", &skip_paths));
+    assert!(should_skip_paths("_drafts/some-path", &skip_paths));
+    assert!(should_skip_paths("_drafts/some-path/bar.md", &skip_paths));
+    assert!(should_skip_paths("some-file.tmp", &skip_paths));
+    assert!(should_skip_paths("some/path/temp", &skip_paths));
+    assert!(!should_skip_paths("some-other-path", &skip_paths));
   }
 }
