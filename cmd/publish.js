@@ -56,7 +56,7 @@ function copyAssetsIfValid(assets, dest) {
   assets.forEach((a) => {
     isValid(a.source).then((response) => {
       if (response) {
-        fs.copy(a.source, dest, (err) => {
+        fs.copy(a.source, join(dest, a.path), (err) => {
           if (err) {
             log.error(err);
           }
@@ -112,12 +112,7 @@ function copyAssetsIfValid(assets, dest) {
             .then((assets) => {
               copyAssetsIfValid(
                 assets,
-                join(
-                  hexo.base_dir,
-                  "_staticContentAssets",
-                  "articles",
-                  post.path,
-                ),
+                join(hexo.base_dir, "_staticContentAssets", "articles"),
               );
             })
             .catch((error) => {
@@ -148,7 +143,7 @@ function copyAssetsIfValid(assets, dest) {
             .then((assets) => {
               copyAssetsIfValid(
                 assets,
-                join(hexo.base_dir, "_staticContentAssets", page.path),
+                join(hexo.base_dir, "_staticContentAssets"),
               );
             })
             .catch((error) => {
