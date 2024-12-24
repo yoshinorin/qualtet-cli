@@ -7,6 +7,12 @@ const daysAgo = process.argv[2] ? process.argv[2] : 10000;
 
 logInfo(`check updated in ${daysAgo} days ago articles assets.`);
 
+function assertImages(assets) {
+  assets.forEach((a) => {
+    isValid(a.source);
+  });
+}
+
 hexo.init().then(() => {
   hexo.load().then(() => {
     let date = new Date();
@@ -17,38 +23,14 @@ hexo.init().then(() => {
     const posts = hexo.locals.get("posts").filter((c) => c.updated > date);
     for (let post of posts.toArray()) {
       const assets = postAsset.find({ post: post._id }).toArray();
-      assets.forEach((a) => {
-        if (
-          a.source.endsWith(".pptx") ||
-          a.source.endsWith(".svg") ||
-          a.source.endsWith(".ico") ||
-          a.source.endsWith(".mp3") ||
-          a.source.endsWith(".gif")
-        ) {
-          // Nothing todo
-        } else {
-          isValid(a.source);
-        }
-      });
+      assertImages(assets);
     }
 
     const pages = hexo.locals.get("pages").filter((c) => c.updated > date);
     for (let page of pages.toArray()) {
       const pageDir = page.path.slice(0, page.path.lastIndexOf("/"));
       const assets = pageAsset.filter((x) => x._id.includes(pageDir));
-      assets.forEach((a) => {
-        if (
-          a.source.endsWith(".pptx") ||
-          a.source.endsWith(".svg") ||
-          a.source.endsWith(".ico") ||
-          a.source.endsWith(".mp3") ||
-          a.source.endsWith(".gif")
-        ) {
-          // Nothing todo
-        } else {
-          isValid(a.source);
-        }
-      });
+      assertImages(assets);
     }
   });
 });
