@@ -1,7 +1,4 @@
-const log = require("hexo-log").default({
-  debug: false,
-  silent: false,
-});
+const { logInfo, logError } = require("../rust-lib/index.js");
 
 const API_URL = process.argv[2];
 const service = process.argv[3];
@@ -29,9 +26,9 @@ const fs = require("fs");
       postSeries(httpClientWithAuth(API_URL, token), s);
     });
     invalidateCache(httpClientWithAuth(API_URL, token));
-    log.info(`caches: invalidated`);
+    logInfo(`caches: invalidated`);
   } catch (err) {
-    log.error(err);
+    logError(err);
   } finally {
     // Nothing todo
   }

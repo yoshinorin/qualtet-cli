@@ -2,10 +2,7 @@ const Hexo = require("hexo");
 const hexo = new Hexo(process.cwd(), { silent: false });
 const fs = require("fs-extra");
 const { join } = require("path");
-const log = require("hexo-log").default({
-  debug: false,
-  silent: false,
-});
+const { logInfo, logError } = require("../rust-lib/index.js");
 
 const {
   httpClientWithNonAuth,
@@ -45,8 +42,8 @@ function generatePostContent(content, type, baseUrl) {
 
 function responseErrorHandler(content, error) {
   try {
-    log.error(error.response.status);
-    log.error(`error: - ${content.path}`);
+    logError(error.response.status);
+    logError(`error: - ${content.path}`);
   } catch {
     // Nothing todo
   }
@@ -58,11 +55,11 @@ function copyAssetsIfValid(assets, dest) {
       if (response) {
         fs.copy(a.source, join(dest, a.path), (err) => {
           if (err) {
-            log.error(err);
+            logError(err);
           }
         });
       } else {
-        log.error(`image copy skipped - : ${a.path}`);
+        logError(`image copy skipped - : ${a.path}`);
       }
     });
   });
@@ -75,9 +72,9 @@ function copyAssetsIfValid(assets, dest) {
 
   try {
     invalidateCache(httpClientWithAuth(API_URL, token));
-    log.info(`caches: invalidated`);
+    logInfo(`caches: invalidated`);
   } catch (err) {
-    log.error(err);
+    logError(err);
   } finally {
     // Nothing todo
   }
@@ -104,7 +101,7 @@ function copyAssetsIfValid(assets, dest) {
           postContent(httpClientWithAuth(API_URL, token), content)
             .then((response) => {
               cnt++;
-              log.info(
+              logInfo(
                 `created - ${cnt}: ${response.data.id} - ${response.data.path}`,
               );
               return postAsset.find({ post: post._id }).toArray();
@@ -134,7 +131,7 @@ function copyAssetsIfValid(assets, dest) {
           postContent(httpClientWithAuth(API_URL, token), content)
             .then((response) => {
               cnt++;
-              log.info(
+              logInfo(
                 `created - ${cnt}: ${response.data.id} - ${response.data.path}`,
               );
               const pageDir = page.path.slice(0, page.path.lastIndexOf("/"));

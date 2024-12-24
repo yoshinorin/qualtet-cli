@@ -1,14 +1,11 @@
 const Hexo = require("hexo");
 const hexo = new Hexo(process.cwd(), { silent: false });
-const log = require("hexo-log").default({
-  debug: false,
-  silent: false,
-});
+const { logInfo } = require("../rust-lib/index.js");
 const { isValid } = require("../lib/imageValidation");
 
 const daysAgo = process.argv[2] ? process.argv[2] : 10000;
 
-log.info(`check updated in ${daysAgo} days ago articles assets.`);
+logInfo(`check updated in ${daysAgo} days ago articles assets.`);
 
 hexo.init().then(() => {
   hexo.load().then(() => {
