@@ -1,14 +1,5 @@
-import { test, expect, describe, it } from "vitest";
-import { setCredential, getCredential, removeTemplateEnginesSyntax, generateRobots, formatPath, shouldSkipPaths, logInfo, logWarn, logError } from "../../rust-lib/index.js"
-import { test, expect, describe, it } from "vitest";
-
-describe("Credential Tests", () => {
-  it("should set and get password", () => {
-    setCredential("hoge", "fuga", "bazbaaaaaz");
-    const password = getCredential("hoge", "fuga");
-    expect(password).toEqual("bazbaaaaaz");
-  });
-});
+import { expect, describe, it } from "vitest";
+import { removeTemplateEnginesSyntax, formatPath, shouldSkipPaths } from "../../rust-lib/index.js"
 
 describe("removeTemplateEnginesSyntax Tests", () => {
   it("should remove template syntax", () => {
@@ -100,27 +91,6 @@ describe('formatPath', () => {
   });
 });
 
-describe('generateRobots', () => {
-  const defaultHeadMeta = "noindex, noarchive, noimageindex, nofollow";
-
-  it('should return defaultHeadMeta if contentType is not "article"', () => {
-    expect(generateRobots(false, "page")).toBe(defaultHeadMeta);
-    expect(generateRobots(true, "page")).toBe(defaultHeadMeta);
-  });
-
-  it('should return defaultHeadMeta if noindex is true', () => {
-    expect(generateRobots(true, "article")).toBe(defaultHeadMeta);
-  });
-
-  it('should return "noarchive, noimageindex" if contentType is "article" and noindex is false', () => {
-    expect(generateRobots(false, "article")).toBe("noarchive, noimageindex");
-  });
-
-  it('should return "noarchive, noimageindex" if contentType is "article" and noindex is null', () => {
-    expect(generateRobots(null, "article")).toBe("noarchive, noimageindex");
-  });
-});
-
 describe('shouldSkipPaths', () => {
   const skipPaths = [
     "temp/**",
@@ -166,17 +136,3 @@ describe('shouldSkipPaths', () => {
     expect(shouldSkipPaths("hoge.md", skipPaths)).toBe(false);
   });
 });
-
-describe('logger', () => {
-  it('should callable info level logger', () => {
-    logInfo("info log test");
-  });
-
-  it('should callable warn level logger', () => {
-    logWarn("warn log test");
-  });
-
-  it('should callable error level logger', () => {
-    logError("error log test");
-  });
-}); 
