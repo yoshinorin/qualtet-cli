@@ -16,7 +16,7 @@ const { postContent } = require("../lib/requests/postContent");
 const { invalidateCache } = require("../lib/requests/invalidateCaches");
 const { getAuthorId, getJwt } = require("../lib/requests/auth");
 const { getCredential } = require("../lib/getCredential.js");
-const { validate } = require("../lib/imageValidation");
+const { isValid } = require("../lib/imageValidation");
 const { shouldSkipPaths } = require("../rust-lib/index.js");
 
 const API_URL = process.argv[2];
@@ -54,7 +54,7 @@ function responseErrorHandler(content, error) {
 
 function copyAssetsIfValid(assets, dest) {
   assets.forEach((a) => {
-    validate(a.source).then((response) => {
+    isValid(a.source).then((response) => {
       if (response) {
         fs.copy(a.source, dest, (err) => {
           if (err) {

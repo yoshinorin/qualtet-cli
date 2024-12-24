@@ -4,7 +4,7 @@ const log = require("hexo-log").default({
   debug: false,
   silent: false,
 });
-const { validate } = require("../lib/imageValidation");
+const { isValid } = require("../lib/imageValidation");
 
 const daysAgo = process.argv[2] ? process.argv[2] : 10000;
 
@@ -30,7 +30,7 @@ hexo.init().then(() => {
         ) {
           // Nothing todo
         } else {
-          validate(a.source);
+          isValid(a.source);
         }
       });
     }
@@ -49,7 +49,7 @@ hexo.init().then(() => {
         ) {
           // Nothing todo
         } else {
-          validate(a.source);
+          isValid(a.source);
         }
       });
     }
