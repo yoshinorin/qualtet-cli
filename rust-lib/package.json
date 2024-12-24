@@ -19,7 +19,7 @@
     "@napi-rs/cli": "2.18.4"
   },
   "engines": {
-    "node": ">= 22"
+    "node": ">= 23"
   },
   "scripts": {
     "artifacts": "napi artifacts",
