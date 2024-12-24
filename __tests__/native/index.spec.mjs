@@ -1,5 +1,5 @@
 import { test, expect, describe, it } from "vitest";
-import { setCredential, getCredential, removeTemplateEnginesSyntax, generateRobots, formatPath, shouldSkipPaths } from "../../rust-lib/index.js"
+import { setCredential, getCredential, removeTemplateEnginesSyntax, generateRobots, formatPath, shouldSkipPaths, logInfo, logWarn, logError } from "../../rust-lib/index.js"
 import { test, expect, describe, it } from "vitest";
 
 describe("Credential Tests", () => {
@@ -166,3 +166,17 @@ describe('shouldSkipPaths', () => {
     expect(shouldSkipPaths("hoge.md", skipPaths)).toBe(false);
   });
 });
+
+describe('logger', () => {
+  it('should callable info level logger', () => {
+    logInfo("info log test");
+  });
+
+  it('should callable warn level logger', () => {
+    logWarn("warn log test");
+  });
+
+  it('should callable error level logger', () => {
+    logError("error log test");
+  });
+}); 

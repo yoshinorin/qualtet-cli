@@ -1,7 +1,12 @@
 mod credential;
+mod logger;
 mod markdown;
 mod robots;
 mod utils;
+
+fn init_logger() {
+  logger::init();
+}
 
 #[macro_use]
 extern crate napi_derive;
@@ -52,4 +57,25 @@ pub fn generate_robots(noindex: Option<bool>, content_type: String) -> napi::Res
 pub fn render_markdown(input: String) -> napi::Result<String> {
   let s = markdown::render(&input);
   Ok(s)
+}
+
+#[napi]
+pub fn log_info(message: String) -> napi::Result<()> {
+  init_logger();
+  log::info!("{}", message);
+  Ok(())
+}
+
+#[napi]
+pub fn log_warn(message: String) -> napi::Result<()> {
+  init_logger();
+  log::warn!("{}", message);
+  Ok(())
+}
+
+#[napi]
+pub fn log_error(message: String) -> napi::Result<()> {
+  init_logger();
+  log::error!("{}", message);
+  Ok(())
 }
