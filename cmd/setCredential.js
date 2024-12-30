@@ -1,4 +1,4 @@
-import { setPassword as setPasswordNative } from "../rust-lib/index.js";
+import { setCredential as setPasswordNative } from "../rust-lib/index.js";
 import * as readline from "node:readline";
 
 const rline = readline.createInterface({
