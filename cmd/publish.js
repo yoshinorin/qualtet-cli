@@ -42,7 +42,7 @@ function generatePostContent(content, type, baseUrl) {
 
 function responseErrorHandler(content, error) {
   try {
-    logError(error.response.status);
+    logError(error.response.status.toString());
     logError(`error: - ${content.path}`);
   } catch {
     // Nothing todo
