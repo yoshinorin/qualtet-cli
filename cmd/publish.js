@@ -8,12 +8,12 @@ const {
   httpClientWithNonAuth,
   httpClientWithAuth,
 } = require("../lib/httpClients");
-const { objectsGenerator } = require("../lib/objectsGenerator");
+const { generatePayload } = require("../lib/contents/generator");
 const { postContent } = require("../lib/requests/postContent");
 const { invalidateCache } = require("../lib/requests/invalidateCaches");
 const { getAuthorId, getJwt } = require("../lib/requests/auth");
 const { getCredential } = require("../lib/getCredential.js");
-const { isValid } = require("../lib/imageValidation");
+const { isValid } = require("../lib/contents/imageValidator.js");
 const { shouldSkipPaths } = require("../rust-lib/index.js");
 
 const API_URL = process.argv[2];
@@ -33,7 +33,7 @@ function generatePostContent(content, type, baseUrl) {
   if (shouldSkipPaths(content.path, SKIP_PATHS)) {
     return null;
   }
-  const generatedContent = objectsGenerator(content, type, baseUrl);
+  const generatedContent = generatePayload(content, type, baseUrl);
   if (!generatedContent) {
     return null;
   }
