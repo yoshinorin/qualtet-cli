@@ -1,15 +1,34 @@
+use std::sync::LazyLock;
+
+use markdown_it::MarkdownIt;
 use markdown_it_footnote;
 use markdown_it_lazyload;
 
+static PARSER: LazyLock<MarkdownIt> = LazyLock::new(|| {
+  let mut parser = markdown_it::MarkdownIt::new();
+
+  markdown_it::plugins::cmark::add(&mut parser);
+  markdown_it::plugins::html::add(&mut parser);
+
+  markdown_it::plugins::extra::smartquotes::add(&mut parser);
+  markdown_it::plugins::extra::strikethrough::add(&mut parser);
+  markdown_it::plugins::extra::syntect::add(&mut parser);
+  markdown_it::plugins::extra::typographer::add(&mut parser);
+
+  markdown_it_footnote::definitions::add(&mut parser);
+  markdown_it_footnote::references::add(&mut parser);
+  markdown_it_footnote::inline::add(&mut parser);
+  markdown_it_footnote::collect::add(&mut parser);
+  markdown_it_footnote::back_refs::add(&mut parser);
+
+  markdown_it_lazyload::add(&mut parser);
+
+  parser
+});
+
 // WIP
 pub fn render(input: &str) -> String {
-  let parser = &mut markdown_it::MarkdownIt::new();
-  markdown_it::plugins::cmark::add(parser);
-  markdown_it::plugins::extra::add(parser);
-  markdown_it_footnote::add(parser);
-  markdown_it_lazyload::add(parser);
-
-  let ast = parser.parse(input);
+  let ast = PARSER.parse(input);
   ast.render()
 }
 
