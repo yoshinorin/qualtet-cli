@@ -1,5 +1,5 @@
 [package]
-edition = "2021"
+edition = "2024"
 name = "rust-lib"
 version = "2.15.0"
 
@@ -8,19 +8,19 @@ crate-type = ["cdylib"]
 
 [dependencies]
 # Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
-napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
-napi-derive = "2.12.2"
-keyring = { version = "3.6.1", features = ["windows-native", "sync-secret-service"] }
+napi = { version = "2.16.17", default-features = false, features = ["napi4"] }
+napi-derive = "2.16.13"
+keyring = { version = "3.6.2", features = ["windows-native", "sync-secret-service"] }
 markdown-it = "0.6.1"
 glob-match = "0.2.1"
-env_logger = "0.11.6"
-log = "0.4.22"
-colored = "2.2.0"
+env_logger = "0.11.8"
+log = "0.4.27"
+colored = "3.0.0"
 markdown-it-footnote = "0.2.0"
 markdown-it-lazyload = "0.1.1"
 
 [build-dependencies]
-napi-build = "2.0.1"
+napi-build = "2.1.6"
 
 [profile.release]
 lto = true
