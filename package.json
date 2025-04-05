@@ -15,9 +15,9 @@
   },
   "author": "yoshinorin",
   "dependencies": {
-    "axios": "1.7.7",
-    "exifreader": "4.23.5",
-    "fs-extra": "11.2.0",
+    "axios": "1.8.4",
+    "exifreader": "4.27.0",
+    "fs-extra": "11.3.0",
     "hexo": "7.3.0",
     "hexo-util": "3.3.0",
     "markdown-it": "13.0.2",
@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@vitest/coverage-v8": "2.1.8",
-    "vitest": "2.1.8"
+    "@vitest/coverage-v8": "3.1.1",
+    "vitest": "3.1.1"
   }
 }
