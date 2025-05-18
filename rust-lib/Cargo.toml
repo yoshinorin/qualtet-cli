@@ -20,7 +20,7 @@ markdown-it-footnote = "0.2.0"
 markdown-it-lazyload = "0.1.1"
 
 [build-dependencies]
-napi-build = "2.1.6"
+napi-build = "2.2.0"
 
 [profile.release]
 lto = true
