@@ -8,7 +8,7 @@ The cli for [Qualtet](https://github.com/yoshinorin/qualtet). A set of wrappers 
 
 * Node.js 22.x
 * rustup 1.27.x
-* rustc 1.83.x
+* rustc 1.85.x
 
 ## Setup
 
