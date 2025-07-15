@@ -1,7 +1,7 @@
 const Hexo = require("hexo");
 const hexo = new Hexo(process.cwd(), { silent: false });
 const { logInfo } = require("../rust-lib/index.js");
-const { isValid } = require("../lib/imageValidation");
+const { isValid } = require("../lib/contents/imageValidator");
 
 const daysAgo = process.argv[2] ? process.argv[2] : 10000;
 
