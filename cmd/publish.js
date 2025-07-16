@@ -50,17 +50,15 @@ function responseErrorHandler(content, error) {
 
 function copyAssetsIfValid(assets, dest) {
   assets.forEach((a) => {
-    isValidImage(a.source).then((response) => {
-      if (response) {
-        fs.copy(a.source, join(dest, a.path), (err) => {
-          if (err) {
-            logError(err);
-          }
-        });
-      } else {
-        logError(`image copy skipped - : ${a.path}`);
-      }
-    });
+    if (isValidImage(a.source)) {
+      fs.copy(a.source, join(dest, a.path), (err) => {
+        if (err) {
+          logError(err);
+        }
+      });
+    } else {
+      logError(`image copy skipped - : ${a.path}`);
+    }
   });
 }
 
