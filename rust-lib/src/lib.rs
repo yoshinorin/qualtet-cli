@@ -1,4 +1,5 @@
 mod credential;
+mod image_validator;
 mod logger;
 mod markdown;
 mod robots;
@@ -78,4 +79,9 @@ pub fn log_error(message: String) -> napi::Result<()> {
   init_logger();
   log::error!("{}", message);
   Ok(())
+}
+
+#[napi]
+pub fn is_valid_image(source: String) -> napi::Result<bool> {
+  image_validator::is_valid(&source).map_err(|e| napi::Error::from_reason(e))
 }

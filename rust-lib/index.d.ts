@@ -13,3 +13,4 @@ export declare function renderMarkdown(input: string): string
 export declare function logInfo(message: string): void
 export declare function logWarn(message: string): void
 export declare function logError(message: string): void
+export declare function isValidImage(source: string): boolean
