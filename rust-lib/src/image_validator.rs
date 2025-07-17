@@ -98,9 +98,7 @@ fn handle_exif_error(source: &str, exif_err: exif::Error) -> Result<bool, String
       return Ok(false);
     }
     exif::Error::NotFound(_msg) => {
-      // TODO: log level should be debug.
-      // crate::log_info(format!("{}: No EXIF data found - {}", source, msg))
-      //    .map_err(|e| e.to_string())?;
+      crate::log_debug(format!("{}: No EXIF data found", source)).map_err(|e| e.to_string())?;
       return Ok(true);
     }
     exif::Error::BlankValue(msg) => {

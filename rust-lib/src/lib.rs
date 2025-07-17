@@ -82,6 +82,13 @@ pub fn log_error(message: String) -> napi::Result<()> {
 }
 
 #[napi]
+pub fn log_debug(message: String) -> napi::Result<()> {
+  init_logger();
+  log::debug!("{}", message);
+  Ok(())
+}
+
+#[napi]
 pub fn is_valid_image(source: String) -> napi::Result<bool> {
   image_validator::is_valid(&source).map_err(|e| napi::Error::from_reason(e))
 }

@@ -28,7 +28,7 @@ pub fn init() {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use log::{error, info, warn};
+  use log::{debug, error, info, warn};
 
   #[test]
   fn test_info_log() {
@@ -46,5 +46,11 @@ mod tests {
   fn test_error_log() {
     init();
     error!("This is an error message");
+  }
+
+  #[test]
+  fn test_debug_log() {
+    init();
+    debug!("This is a debug message");
   }
 }
