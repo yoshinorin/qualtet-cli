@@ -25,8 +25,8 @@ jobs:
       - name: Set up rust
         run: |
           cd rust-lib
-          rustup toolchain install 1.85.1 --profile minimal --no-self-update
-          rustup default 1.85.1-${{ matrix.target.triple }}
+          rustup toolchain install 1.87.0 --profile minimal --no-self-update
+          rustup default 1.87.0-${{ matrix.target.triple }}
           rustup --version
           rustc --version
           cargo --version
@@ -35,7 +35,7 @@ jobs:
           cd rust-lib
           npm install
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install root dir dependencies
