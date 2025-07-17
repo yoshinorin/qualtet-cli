@@ -229,13 +229,29 @@ mod tests {
 
   #[test]
   fn test_unsupported_image_formats() {
-    // These should return Ok(true) with a warning, not an error
-    assert!(is_valid("test.gif").unwrap());
-    assert!(is_valid("test.bmp").unwrap());
+    // These formats are not in SKIP_EXTENSIONS and files don't exist,
+    // so they should return Err with "File not found"
+    let result = is_valid("test.gif");
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("File not found"));
+
+    let result = is_valid("test.bmp");
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("File not found"));
+
+    // .ico is in SKIP_EXTENSIONS, so it should be skipped
     assert!(is_valid("test.ico").unwrap());
+
     // Test case insensitive
-    assert!(is_valid("test.GIF").unwrap());
-    assert!(is_valid("test.BMP").unwrap());
+    let result = is_valid("test.GIF");
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("File not found"));
+
+    let result = is_valid("test.BMP");
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("File not found"));
+
+    // .ICO is in SKIP_EXTENSIONS, so it should be skipped (case insensitive)
     assert!(is_valid("test.ICO").unwrap());
   }
 
@@ -249,19 +265,26 @@ mod tests {
 
   #[test]
   fn test_edge_cases() {
-    // Test empty filename - should be treated as unsupported format
-    assert!(is_valid("").unwrap()); // Empty string has no extension, so it's unsupported
+    // Test empty filename - no extension, so not in SKIP_EXTENSIONS
+    // Should fail with file not found
+    let result = is_valid("");
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("File not found"));
 
-    // Test filename without extension - should be treated as unsupported format
+    // Test filename without extension - not in SKIP_EXTENSIONS
+    // Should fail with file not found
     let result = is_valid("filename_without_extension");
-    assert!(result.unwrap()); // No extension means unsupported format, should return true
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("File not found"));
 
-    // Test filename with multiple dots
+    // Test filename with multiple dots - .md is in SKIP_EXTENSIONS
     assert!(should_skip_validation("file.backup.md"));
 
-    // Test very long filenames
+    // Test very long filenames - .jpg is not in SKIP_EXTENSIONS
+    // Should fail with file not found
     let long_filename = format!("{}.jpg", "a".repeat(1000));
     let result = is_valid(&long_filename);
-    assert!(result.is_err()); // Should fail because file doesn't exist
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("File not found"));
   }
 }
