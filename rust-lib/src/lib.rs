@@ -89,6 +89,16 @@ pub fn log_debug(message: String) -> napi::Result<()> {
 }
 
 #[napi]
+pub fn set_log_level(level: String) -> napi::Result<()> {
+  logger::set_log_level(&level).map_err(|e| napi::Error::from_reason(e))
+}
+
+#[napi]
+pub fn get_log_level() -> napi::Result<String> {
+  Ok(logger::get_log_level())
+}
+
+#[napi]
 pub fn is_valid_image(source: String) -> napi::Result<bool> {
   image_validator::is_valid(&source).map_err(|e| napi::Error::from_reason(e))
 }

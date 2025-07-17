@@ -14,4 +14,6 @@ export declare function logInfo(message: string): void
 export declare function logWarn(message: string): void
 export declare function logError(message: string): void
 export declare function logDebug(message: string): void
+export declare function setLogLevel(level: string): void
+export declare function getLogLevel(): string
 export declare function isValidImage(source: string): boolean
