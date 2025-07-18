@@ -100,5 +100,55 @@ pub fn get_log_level() -> napi::Result<String> {
 
 #[napi]
 pub fn is_valid_image(source: String) -> napi::Result<bool> {
-  image_validator::is_valid(&source).map_err(|e| napi::Error::from_reason(e))
+  // TODO: move somewhere
+  match image_validator::is_valid(&source) {
+    Ok(result) => match result {
+      image_validator::ValidationResult::Valid { reason } => {
+        match reason {
+          image_validator::ValidReason::HasExifNoGps => {
+            log_warn(format!("{}: has EXIF", source))?;
+          }
+          image_validator::ValidReason::NoExifData => {
+            log_debug(format!("{}: no EXIF", source))?;
+          }
+          image_validator::ValidReason::BlankExifValues => {
+            log_warn(format!("{}: EXIF contains blank values", source))?;
+          }
+        }
+        Ok(true)
+      }
+      image_validator::ValidationResult::Invalid { reason, gps_data } => {
+        match reason {
+          image_validator::InvalidReason::GpsInfoFound => {
+            log_error(format!("{}: has GPS info", source))?;
+            if let Some(json_data) = gps_data {
+              println!("{}", json_data);
+            }
+          }
+          image_validator::InvalidReason::InvalidFormat(msg) => {
+            log_error(format!("{}: Invalid file format - {}", source, msg))?;
+          }
+          image_validator::InvalidReason::FileTooLarge(msg) => {
+            log_error(format!(
+              "{}: File is too large to process - {}",
+              source, msg
+            ))?;
+          }
+          image_validator::InvalidReason::ExifError(msg) => {
+            log_error(format!("{}: EXIF reading failed - {}", source, msg))?;
+          }
+        }
+        Ok(false)
+      }
+      image_validator::ValidationResult::Skipped { reason } => {
+        match reason {
+          image_validator::SkipReason::SkippedExtension => {
+            log_warn(format!("asset validation skipped - : {}", source))?;
+          }
+        }
+        Ok(true)
+      }
+    },
+    Err(e) => Err(napi::Error::from_reason(e)),
+  }
 }

@@ -3,6 +3,48 @@ use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
 
+#[derive(Debug, Clone, PartialEq)]
+pub enum GpsDetectionResult {
+  Found,
+  NotFound,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum ValidationResult {
+  Valid {
+    reason: ValidReason,
+  },
+  Invalid {
+    reason: InvalidReason,
+    gps_data: Option<String>,
+  },
+  Skipped {
+    reason: SkipReason,
+  },
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum ValidReason {
+  HasExifNoGps,
+  NoExifData,
+  BlankExifValues,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum InvalidReason {
+  GpsInfoFound,
+  InvalidFormat(String),
+  FileTooLarge(String),
+  ExifError(String),
+}
+
+/// Reasons why file validation was skipped
+#[derive(Debug, Clone, PartialEq)]
+pub enum SkipReason {
+  /// File extension is in skip list
+  SkippedExtension,
+}
+
 const SKIP_EXTENSIONS: &[&str] = &[
   ".md", ".mermaid", ".mp3", ".mp4", ".webm", ".pptx", ".svg", ".txt", ".ico",
 ];
@@ -50,14 +92,20 @@ fn should_skip_validation(source: &str) -> bool {
 }
 
 /// Check if EXIF data contains any GPS information
-fn has_gps_information(exif_data: &exif::Exif) -> bool {
-  GPS_TAGS
+fn has_gps_information(exif_data: &exif::Exif) -> GpsDetectionResult {
+  let has_gps = GPS_TAGS
     .iter()
-    .any(|&tag| exif_data.get_field(tag, exif::In::PRIMARY).is_some())
+    .any(|&tag| exif_data.get_field(tag, exif::In::PRIMARY).is_some());
+
+  if has_gps {
+    GpsDetectionResult::Found
+  } else {
+    GpsDetectionResult::NotFound
+  }
 }
 
-/// Collect GPS data from EXIF and format as JSON
-fn collect_gps_data(exif_data: &exif::Exif, source: &str) -> Result<(), String> {
+/// Collect GPS data from EXIF and format as JSON string
+fn collect_gps_data(exif_data: &exif::Exif, source: &str) -> Result<String, String> {
   let mut gps_data = Map::new();
   for &tag in GPS_TAGS {
     if let Some(field) = exif_data.get_field(tag, exif::In::PRIMARY) {
@@ -73,60 +121,38 @@ fn collect_gps_data(exif_data: &exif::Exif, source: &str) -> Result<(), String> 
       "gps": gps_data
   });
 
-  match serde_json::to_string_pretty(&json_output) {
-    Ok(formatted_json) => {
-      println!("{}", formatted_json);
-      Ok(())
-    }
-    Err(json_err) => {
-      crate::log_error(format!(
-        "{}: Failed to format GPS data as JSON - {}",
-        source, json_err
-      ))
-      .map_err(|e| e.to_string())?;
-      Ok(())
-    }
-  }
+  serde_json::to_string_pretty(&json_output)
+    .map_err(|e| format!("Failed to format GPS data as JSON: {}", e))
 }
 
-/// Handle EXIF reading errors with appropriate logging
-fn handle_exif_error(source: &str, exif_err: exif::Error) -> Result<bool, String> {
+fn handle_exif_error(exif_err: exif::Error) -> ValidationResult {
   match exif_err {
-    exif::Error::InvalidFormat(msg) => {
-      crate::log_error(format!("{}: Invalid file format - {}", source, msg))
-        .map_err(|e| e.to_string())?;
-      return Ok(false);
-    }
-    exif::Error::NotFound(_msg) => {
-      crate::log_debug(format!("{}: No EXIF data found", source)).map_err(|e| e.to_string())?;
-      return Ok(true);
-    }
-    exif::Error::BlankValue(msg) => {
-      crate::log_warn(format!("{}: EXIF contains blank values - {}", source, msg))
-        .map_err(|e| e.to_string())?;
-      return Ok(true);
-    }
-    exif::Error::TooBig(msg) => {
-      crate::log_error(format!(
-        "{}: File is too large to process - {}",
-        source, msg
-      ))
-      .map_err(|e| e.to_string())?;
-      return Ok(false);
-    }
-    _ => {
-      crate::log_error(format!("{}: EXIF reading failed - {}", source, exif_err))
-        .map_err(|e| e.to_string())?;
-      return Ok(false);
-    }
+    exif::Error::InvalidFormat(msg) => ValidationResult::Invalid {
+      reason: InvalidReason::InvalidFormat(msg.to_string()),
+      gps_data: None,
+    },
+    exif::Error::NotFound(_msg) => ValidationResult::Valid {
+      reason: ValidReason::NoExifData,
+    },
+    exif::Error::BlankValue(_msg) => ValidationResult::Valid {
+      reason: ValidReason::BlankExifValues,
+    },
+    exif::Error::TooBig(msg) => ValidationResult::Invalid {
+      reason: InvalidReason::FileTooLarge(msg.to_string()),
+      gps_data: None,
+    },
+    _ => ValidationResult::Invalid {
+      reason: InvalidReason::ExifError(exif_err.to_string()),
+      gps_data: None,
+    },
   }
 }
 
-pub fn is_valid(source: &str) -> Result<bool, String> {
+pub fn is_valid(source: &str) -> Result<ValidationResult, String> {
   if should_skip_validation(source) {
-    crate::log_warn(format!("asset validation skipped - : {}", source))
-      .map_err(|e| e.to_string())?;
-    return Ok(true);
+    return Ok(ValidationResult::Skipped {
+      reason: SkipReason::SkippedExtension,
+    });
   }
 
   let path = Path::new(source);
@@ -139,20 +165,22 @@ pub fn is_valid(source: &str) -> Result<bool, String> {
 
   // Read EXIF data
   match exif::Reader::new().read_from_container(&mut reader) {
-    Ok(exif_data) => {
-      if has_gps_information(&exif_data) {
-        crate::log_error(format!("{}: has GPS info", source)).map_err(|e| e.to_string())?;
-
-        collect_gps_data(&exif_data, source)?;
-        return Ok(false);
-      } else {
-        crate::log_warn(format!("{}: has EXIF", source)).map_err(|e| e.to_string())?;
-        return Ok(true);
-      }
-    }
-    Err(exif_err) => {
-      return handle_exif_error(source, exif_err);
-    }
+    Ok(exif_data) => match has_gps_information(&exif_data) {
+      GpsDetectionResult::Found => match collect_gps_data(&exif_data, source) {
+        Ok(gps_json) => Ok(ValidationResult::Invalid {
+          reason: InvalidReason::GpsInfoFound,
+          gps_data: Some(gps_json),
+        }),
+        Err(_json_error) => Ok(ValidationResult::Invalid {
+          reason: InvalidReason::GpsInfoFound,
+          gps_data: None,
+        }),
+      },
+      GpsDetectionResult::NotFound => Ok(ValidationResult::Valid {
+        reason: ValidReason::HasExifNoGps,
+      }),
+    },
+    Err(exif_err) => Ok(handle_exif_error(exif_err)),
   }
 }
 
@@ -186,71 +214,127 @@ mod tests {
   #[test]
   fn test_handle_exif_error_types() {
     // Test different error types
-    let test_file = "test.jpg";
 
-    // Test InvalidFormat error - should return Ok(false)
+    // Test InvalidFormat error - should return Invalid
     let invalid_format_err = exif::Error::InvalidFormat("Invalid JPEG");
-    let result = handle_exif_error(test_file, invalid_format_err);
-    assert!(result.is_ok());
-    assert_eq!(result.unwrap(), false);
+    let result = handle_exif_error(invalid_format_err);
+    match result {
+      ValidationResult::Invalid {
+        reason: InvalidReason::InvalidFormat(_),
+        ..
+      } => {}
+      _ => panic!("Expected Invalid with InvalidFormat reason"),
+    }
 
-    // Test NotFound error - should return Ok(true)
+    // Test NotFound error - should return Valid with NoExifData
     let not_found_err = exif::Error::NotFound("No EXIF");
-    let result = handle_exif_error(test_file, not_found_err);
-    assert!(result.is_ok());
-    assert_eq!(result.unwrap(), true);
+    let result = handle_exif_error(not_found_err);
+    match result {
+      ValidationResult::Valid {
+        reason: ValidReason::NoExifData,
+      } => {}
+      _ => panic!("Expected Valid with NoExifData reason"),
+    }
 
-    // Test BlankValue error - should return Ok(true)
+    // Test BlankValue error - should return Valid with BlankExifValues
     let blank_value_err = exif::Error::BlankValue("Empty value");
-    let result = handle_exif_error(test_file, blank_value_err);
-    assert!(result.is_ok());
-    assert_eq!(result.unwrap(), true);
+    let result = handle_exif_error(blank_value_err);
+    match result {
+      ValidationResult::Valid {
+        reason: ValidReason::BlankExifValues,
+      } => {}
+      _ => panic!("Expected Valid with BlankExifValues reason"),
+    }
 
-    // Test TooBig error - should return Ok(false)
+    // Test TooBig error - should return Invalid with FileTooLarge
     let too_big_err = exif::Error::TooBig("File too large");
-    let result = handle_exif_error(test_file, too_big_err);
-    assert!(result.is_ok());
-    assert_eq!(result.unwrap(), false);
+    let result = handle_exif_error(too_big_err);
+    match result {
+      ValidationResult::Invalid {
+        reason: InvalidReason::FileTooLarge(_),
+        ..
+      } => {}
+      _ => panic!("Expected Invalid with FileTooLarge reason"),
+    }
   }
 
   #[test]
   fn test_skip_extensions() {
-    assert!(is_valid("test.md").unwrap());
-    assert!(is_valid("test.svg").unwrap());
-    assert!(is_valid("test.txt").unwrap());
+    // Test that skip extensions return Skipped result
+    match is_valid("test.md").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .md file"),
+    }
+
+    match is_valid("test.svg").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .svg file"),
+    }
+
+    match is_valid("test.txt").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .txt file"),
+    }
+
     // Test case insensitive extensions
-    assert!(is_valid("test.MD").unwrap());
-    assert!(is_valid("test.SVG").unwrap());
-    assert!(is_valid("test.TXT").unwrap());
-    assert!(is_valid("test.Mp4").unwrap());
+    match is_valid("test.MD").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .MD file"),
+    }
+
+    match is_valid("test.SVG").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .SVG file"),
+    }
+
+    match is_valid("test.TXT").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .TXT file"),
+    }
+
+    match is_valid("test.Mp4").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .Mp4 file"),
+    }
   }
 
   #[test]
   fn test_unsupported_image_formats() {
-    // These formats are not in SKIP_EXTENSIONS and files don't exist,
-    // so they should return Err with "File not found"
-    let result = is_valid("test.gif");
-    assert!(result.is_err());
-    assert!(result.unwrap_err().contains("File not found"));
-
-    let result = is_valid("test.bmp");
-    assert!(result.is_err());
-    assert!(result.unwrap_err().contains("File not found"));
-
+    // These should return ValidationResult indicating valid (no GPS found) or error
+    // since these files don't exist, they should return an error
+    assert!(is_valid("test.gif").is_err());
+    assert!(is_valid("test.bmp").is_err());
     // .ico is in SKIP_EXTENSIONS, so it should be skipped
-    assert!(is_valid("test.ico").unwrap());
+    match is_valid("test.ico").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .ico file"),
+    }
 
     // Test case insensitive
-    let result = is_valid("test.GIF");
-    assert!(result.is_err());
-    assert!(result.unwrap_err().contains("File not found"));
-
-    let result = is_valid("test.BMP");
-    assert!(result.is_err());
-    assert!(result.unwrap_err().contains("File not found"));
-
-    // .ICO is in SKIP_EXTENSIONS, so it should be skipped (case insensitive)
-    assert!(is_valid("test.ICO").unwrap());
+    assert!(is_valid("test.GIF").is_err());
+    assert!(is_valid("test.BMP").is_err());
+    match is_valid("test.ICO").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .ICO file"),
+    }
   }
 
   #[test]
@@ -275,7 +359,7 @@ mod tests {
     assert!(result.is_err());
     assert!(result.unwrap_err().contains("File not found"));
 
-    // Test filename with multiple dots - .md is in SKIP_EXTENSIONS
+    // Test filename with multiple dots
     assert!(should_skip_validation("file.backup.md"));
 
     // Test very long filenames - .jpg is not in SKIP_EXTENSIONS
