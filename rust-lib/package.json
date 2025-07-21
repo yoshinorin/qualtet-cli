@@ -1,7 +1,7 @@
 {
   "name": "rust-lib",
   "private": true,
-  "version": "2.15.0",
+  "version": "2.18.0",
   "main": "index.js",
   "types": "index.d.ts",
   "author": "yoshinorin",
