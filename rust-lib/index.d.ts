@@ -8,6 +8,7 @@ export declare function getCredential(serviceName: string, authorName: string): 
 export declare function removeTemplateEnginesSyntax(text: string): string
 export declare function formatPath(path: string, contentType: string): string
 export declare function shouldSkipPaths(path: string, skipPaths: Array<string>): boolean
+export declare function externalLink(data: string, baseUrl: string): string
 export declare function generateRobots(noindex: boolean | undefined | null, contentType: string): string
 export declare function renderMarkdown(input: string): string
 export declare function logInfo(message: string): void

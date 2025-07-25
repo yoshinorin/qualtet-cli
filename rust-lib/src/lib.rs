@@ -1,4 +1,5 @@
 mod credential;
+mod external_link;
 mod image_validator;
 mod logger;
 mod markdown;
@@ -45,6 +46,12 @@ pub fn should_skip_paths(path: String, skip_paths: Vec<String>) -> napi::Result<
   let skip_paths: Vec<&str> = skip_paths.iter().map(|s| s.as_str()).collect();
   let b = utils::should_skip_paths(&path, &skip_paths);
   Ok(b)
+}
+
+#[napi]
+pub fn external_link(data: String, base_url: String) -> napi::Result<String> {
+  let result = external_link::replace_external_link(&data, &base_url);
+  Ok(result)
 }
 
 #[napi]
