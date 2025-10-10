@@ -25,13 +25,15 @@ $ npm run build
 
 ## Commands
 
-- assertImages: `node ./cmd/assertImages.js --days-ago=<daysAgo>`
-- delete: `node ./cmd/delete.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --content-id=<contentId>`
-- deleteTag: `node ./cmd/deleteTag.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --tag-id=<tagId>`
-- invalidateCaches: `node ./cmd/invalidateCaches.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName>`
-- postSeriesFromFile: `node ./cmd/postSeriesFromFile.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --file-path=<JSON filePath>`
-- publish: `node ./cmd/publish.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --days-ago=<daysAgo>`
-- setCredential: `node ./cmd/setCredential.js`
+| Command | Description | Usage |
+|---------|-------------|-------|
+| `assertImages` | Validate images for EXIF/GPS info | `node ./cmd/assertImages.js --days-ago=<daysAgo>` |
+| `delete` | Delete content by ID | `node ./cmd/delete.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --content-id=<contentId>` |
+| `deleteTag` | Delete tag by ID | `node ./cmd/deleteTag.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --tag-id=<tagId>` |
+| `invalidateCaches` | Invalidate cache | `node ./cmd/invalidateCaches.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName>` |
+| `postSeriesFromFile` | Create/update series from JSON | `node ./cmd/postSeriesFromFile.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --file-path=<filePath>` |
+| `publish` | Publish updated articles | `node ./cmd/publish.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --days-ago=<daysAgo>` |
+| `setCredential` | Set credential to keytar | `node ./cmd/setCredential.js` |
 
 ### `assertImages`
 
