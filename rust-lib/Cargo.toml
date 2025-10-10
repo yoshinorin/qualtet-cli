@@ -8,8 +8,8 @@ crate-type = ["cdylib"]
 
 [dependencies]
 # Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
-napi = { version = "2.16.17", default-features = false, features = ["napi4", "tokio_rt"] }
-napi-derive = "2.16.13"
+napi = { version = "3.3.0", default-features = false, features = ["napi4", "tokio_rt"] }
+napi-derive = "3.0.0-beta.12"
 keyring = { version = "3.6.2", features = ["windows-native", "sync-secret-service"] }
 markdown-it = "0.6.1"
 glob-match = "0.2.1"

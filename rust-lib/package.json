@@ -6,17 +6,14 @@
   "types": "index.d.ts",
   "author": "yoshinorin",
   "napi": {
-    "name": "rust-lib",
-    "triples": {
-      "defaults": false,
-      "additional": [
-        "x86_64-pc-windows-msvc",
-        "x86_64-unknown-linux-gnu"
-      ]
-    }
+    "binaryName": "rust-lib",
+    "targets": [
+      "x86_64-pc-windows-msvc",
+      "x86_64-unknown-linux-gnu"
+    ]
   },
   "devDependencies": {
-    "@napi-rs/cli": "2.18.4"
+    "@napi-rs/cli": "3.3.0"
   },
   "engines": {
     "node": ">= 24"
