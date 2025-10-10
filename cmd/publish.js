@@ -9,10 +9,16 @@ const { postContent } = require("../lib/requests/postContent");
 const { invalidateCache } = require("../lib/requests/invalidateCaches");
 const { getAuthToken } = require("../lib/requests/auth");
 const { shouldSkipPaths, isValidImage } = require("../rust-lib/index.js");
+const { parseCommonArgs } = require("../lib/parseCommonArgs");
 
-const API_URL = process.argv[2];
-const service = process.argv[3];
-const authorName = process.argv[4];
+const {
+  apiUrl,
+  service,
+  authorName,
+  "days-ago": daysAgo = "5",
+} = parseCommonArgs({
+  "days-ago": { type: "string", default: "5" },
+});
 
 const SKIP_PATHS = [
   "temp/**",
@@ -58,18 +64,16 @@ function copyAssetsIfValid(assets, dest) {
 }
 
 (async () => {
-  const token = await getAuthToken(API_URL, service, authorName);
+  const token = await getAuthToken(apiUrl, service, authorName);
 
   try {
-    invalidateCache(API_URL, token);
+    invalidateCache(apiUrl, token);
     logInfo(`caches: invalidated`);
   } catch (err) {
     logError(err);
   } finally {
     // Nothing todo
   }
-
-  const daysAgo = process.argv[5] ? process.argv[5] : 5;
 
   async function processContents(
     contents,
@@ -89,7 +93,7 @@ function copyAssetsIfValid(assets, dest) {
       }
 
       try {
-        const response = await postContent(API_URL, token, content);
+        const response = await postContent(apiUrl, token, content);
         processedCount++;
         const data = JSON.parse(response);
         logInfo(`created - ${processedCount}: ${data.id} - ${data.path}`);

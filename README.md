@@ -25,12 +25,12 @@ $ npm run build
 
 ## Commands
 
-- assertImages: `node ./cmd/assertImages.js <daysAgo>`
-- delete: `node ./cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>`
-- deleteTag: `node ./cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>`
-- invalidateCaches: `node ./cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>`
-- postSeriesFromFile: `node ./cmd/postSeriesFromFile.js <apiUrl> <serviceName> <authorName> <JSON filePath>`
-- publish: `node ./cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>`
+- assertImages: `node ./cmd/assertImages.js --days-ago=<daysAgo>`
+- delete: `node ./cmd/delete.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --content-id=<contentId>`
+- deleteTag: `node ./cmd/deleteTag.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --tag-id=<tagId>`
+- invalidateCaches: `node ./cmd/invalidateCaches.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName>`
+- postSeriesFromFile: `node ./cmd/postSeriesFromFile.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --file-path=<JSON filePath>`
+- publish: `node ./cmd/publish.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --days-ago=<daysAgo>`
 - setCredential: `node ./cmd/setCredential.js`
 
 ### `assertImages`
@@ -38,7 +38,7 @@ $ npm run build
 Validate an image has EXIF(includes GPS) info or not.
 
 ```sh
-$ node ./cmd/assertImages.js <daysAgo (default: 10000)>
+$ node ./cmd/assertImages.js --days-ago=<daysAgo (default: 10000)>
 
 INFO  check updated in 10000 days ago articles assets.
 INFO  Validating config
@@ -65,7 +65,7 @@ WARN  C:\Users\<userName>\source\_posts\example2\hoge.jpg: has EXIF
 Delete content (post or page) by its id.
 
 ```sh
-$ node ./cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>
+$ node ./cmd/delete.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --content-id=<contentId>
 ```
 
 ### `deleteTag`
@@ -73,7 +73,7 @@ $ node ./cmd/delete.js <apiUrl> <serviceName> <authorName> <contentId>
 Delete tag by its id.
 
 ```sh
-$ node ./cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>
+$ node ./cmd/deleteTag.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --tag-id=<tagId>
 ```
 
 ### `invalidateCaches`
@@ -81,7 +81,7 @@ $ node ./cmd/deleteTag.js <apiUrl> <serviceName> <authorName> <tagId>
 Invalidate Cache.
 
 ```
-$ node ./cmd/invalidateCaches.js <apiUrl> <serviceName> <authorName>
+$ node ./cmd/invalidateCaches.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName>
 INFO  caches: invalidated
 ```
 
@@ -90,7 +90,7 @@ INFO  caches: invalidated
 Create or Update series from JSON file.
 
 ```
-$ node ./cmd/postSeriesFromFile.js <apiUrl> <serviceName> <authorName> <JSON filePath>`
+$ node ./cmd/postSeriesFromFile.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --file-path=<JSON filePath>
 
 // example JSON
 {
@@ -105,7 +105,7 @@ $ node ./cmd/postSeriesFromFile.js <apiUrl> <serviceName> <authorName> <JSON fil
 Publish articles (posts or pages) that have been updated up to n days ago.
 
 ```sh
-$ node ./cmd/publish.js <apiUrl> <serviceName> <authorName> <daysAgo>
+$ node ./cmd/publish.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --days-ago=<daysAgo>
 INFO  caches: invalidated
 INFO  Validating config
 INFO  Start processing

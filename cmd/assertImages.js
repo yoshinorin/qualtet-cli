@@ -1,8 +1,15 @@
 const Hexo = require("hexo");
 const hexo = new Hexo(process.cwd(), { silent: false });
 const { logInfo, isValidImage } = require("../rust-lib/index.js");
+const { parseArgs } = require("node:util");
 
-const daysAgo = process.argv[2] ? process.argv[2] : 10000;
+const { values } = parseArgs({
+  options: {
+    "days-ago": { type: "string", default: "10000" },
+  },
+});
+
+const daysAgo = values["days-ago"];
 
 logInfo(`check updated in ${daysAgo} days ago articles assets.`);
 

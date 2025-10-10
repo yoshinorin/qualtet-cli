@@ -1,17 +1,15 @@
 const { logInfo, logError } = require("../rust-lib/index.js");
-
-const API_URL = process.argv[2];
-const service = process.argv[3];
-const authorName = process.argv[4];
-
 const { invalidateCache } = require("../lib/requests/invalidateCaches");
 const { getAuthToken } = require("../lib/requests/auth");
+const { parseCommonArgs } = require("../lib/parseCommonArgs");
+
+const { apiUrl, service, authorName } = parseCommonArgs();
 
 (async () => {
-  const token = await getAuthToken(API_URL, service, authorName);
+  const token = await getAuthToken(apiUrl, service, authorName);
 
   try {
-    invalidateCache(API_URL, token);
+    invalidateCache(apiUrl, token);
     logInfo(`caches: invalidated`);
   } catch (err) {
     logError(err);
