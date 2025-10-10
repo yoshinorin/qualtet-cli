@@ -17,4 +17,7 @@ export declare function logError(message: string): void
 export declare function logDebug(message: string): void
 export declare function setLogLevel(level: string): void
 export declare function getLogLevel(): string
+export declare function httpGet(baseUrl: string, path: string, token?: string | undefined | null): Promise<string>
+export declare function httpPost(baseUrl: string, path: string, data: string, token?: string | undefined | null): Promise<string>
+export declare function httpDelete(baseUrl: string, path: string, token?: string | undefined | null): Promise<string>
 export declare function isValidImage(source: string): boolean

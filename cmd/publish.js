@@ -4,10 +4,6 @@ const fs = require("fs-extra");
 const { join } = require("path");
 const { logInfo, logError } = require("../rust-lib/index.js");
 
-const {
-  httpClientWithNonAuth,
-  httpClientWithAuth,
-} = require("../lib/httpClients");
 const { generatePayload } = require("../lib/contents/generator");
 const { postContent } = require("../lib/requests/postContent");
 const { invalidateCache } = require("../lib/requests/invalidateCaches");
@@ -64,11 +60,11 @@ function copyAssetsIfValid(assets, dest) {
 
 (async () => {
   const password = getCredential(service, authorName);
-  const author = getAuthorId(httpClientWithNonAuth(API_URL), authorName);
-  const token = await getJwt(httpClientWithNonAuth(API_URL), author, password);
+  const author = getAuthorId(API_URL, authorName);
+  const token = await getJwt(API_URL, author, password);
 
   try {
-    invalidateCache(httpClientWithAuth(API_URL, token));
+    invalidateCache(API_URL, token);
     logInfo(`caches: invalidated`);
   } catch (err) {
     logError(err);
@@ -95,11 +91,12 @@ function copyAssetsIfValid(assets, dest) {
           if (content == null) {
             continue;
           }
-          postContent(httpClientWithAuth(API_URL, token), content)
+          postContent(API_URL, token, content)
             .then((response) => {
               cnt++;
+              const data = JSON.parse(response);
               logInfo(
-                `created - ${cnt}: ${response.data.id} - ${response.data.path}`,
+                `created - ${cnt}: ${data.id} - ${data.path}`,
               );
               return postAsset.find({ post: post._id }).toArray();
             })
@@ -125,11 +122,12 @@ function copyAssetsIfValid(assets, dest) {
           if (content == null) {
             continue;
           }
-          postContent(httpClientWithAuth(API_URL, token), content)
+          postContent(API_URL, token, content)
             .then((response) => {
               cnt++;
+              const data = JSON.parse(response);
               logInfo(
-                `created - ${cnt}: ${response.data.id} - ${response.data.path}`,
+                `created - ${cnt}: ${data.id} - ${data.path}`,
               );
               const pageDir = page.path.slice(0, page.path.lastIndexOf("/"));
               return pageAsset.filter((x) => x._id.includes(pageDir));

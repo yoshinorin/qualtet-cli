@@ -310,7 +310,7 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { setCredential, getCredential, removeTemplateEnginesSyntax, formatPath, shouldSkipPaths, externalLink, generateRobots, renderMarkdown, logInfo, logWarn, logError, logDebug, setLogLevel, getLogLevel, isValidImage } = nativeBinding
+const { setCredential, getCredential, removeTemplateEnginesSyntax, formatPath, shouldSkipPaths, externalLink, generateRobots, renderMarkdown, logInfo, logWarn, logError, logDebug, setLogLevel, getLogLevel, httpGet, httpPost, httpDelete, isValidImage } = nativeBinding
 
 module.exports.setCredential = setCredential
 module.exports.getCredential = getCredential
@@ -326,4 +326,7 @@ module.exports.logError = logError
 module.exports.logDebug = logDebug
 module.exports.setLogLevel = setLogLevel
 module.exports.getLogLevel = getLogLevel
+module.exports.httpGet = httpGet
+module.exports.httpPost = httpPost
+module.exports.httpDelete = httpDelete
 module.exports.isValidImage = isValidImage

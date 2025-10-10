@@ -1,5 +1,6 @@
 mod credential;
 mod external_link;
+mod http_client;
 mod image_validator;
 mod logger;
 mod markdown;
@@ -103,6 +104,40 @@ pub fn set_log_level(level: String) -> napi::Result<()> {
 #[napi]
 pub fn get_log_level() -> napi::Result<String> {
   Ok(logger::get_log_level())
+}
+
+#[napi]
+pub async fn http_get(
+  base_url: String,
+  path: String,
+  token: Option<String>,
+) -> napi::Result<String> {
+  http_client::http_get(&base_url, &path, token.as_deref())
+    .await
+    .map_err(|e| napi::Error::from_reason(e))
+}
+
+#[napi]
+pub async fn http_post(
+  base_url: String,
+  path: String,
+  data: String,
+  token: Option<String>,
+) -> napi::Result<String> {
+  http_client::http_post(&base_url, &path, &data, token.as_deref())
+    .await
+    .map_err(|e| napi::Error::from_reason(e))
+}
+
+#[napi]
+pub async fn http_delete(
+  base_url: String,
+  path: String,
+  token: Option<String>,
+) -> napi::Result<String> {
+  http_client::http_delete(&base_url, &path, token.as_deref())
+    .await
+    .map_err(|e| napi::Error::from_reason(e))
 }
 
 #[napi]
