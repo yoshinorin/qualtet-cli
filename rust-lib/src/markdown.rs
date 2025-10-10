@@ -8,12 +8,13 @@ static PARSER: LazyLock<MarkdownIt> = LazyLock::new(|| {
   let mut parser = markdown_it::MarkdownIt::new();
 
   markdown_it::plugins::cmark::add(&mut parser);
-  markdown_it::plugins::html::add(&mut parser);
 
   markdown_it::plugins::extra::smartquotes::add(&mut parser);
+  markdown_it::plugins::extra::tables::add(&mut parser);
   markdown_it::plugins::extra::strikethrough::add(&mut parser);
   markdown_it::plugins::extra::syntect::add(&mut parser);
   markdown_it::plugins::extra::typographer::add(&mut parser);
+  markdown_it::plugins::html::add(&mut parser);
 
   markdown_it_footnote::definitions::add(&mut parser);
   markdown_it_footnote::references::add(&mut parser);
