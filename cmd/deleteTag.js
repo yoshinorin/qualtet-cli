@@ -6,13 +6,10 @@ const tagId = process.argv[5];
 
 const { deleteTagRequest } = require("../lib/requests/deleteTag");
 const { invalidateCache } = require("../lib/requests/invalidateCaches");
-const { getAuthorId, getJwt } = require("../lib/requests/auth");
-const { getCredential } = require("../lib/getCredential.js");
+const { getAuthToken } = require("../lib/requests/auth");
 
 (async () => {
-  const password = getCredential(service, authorName);
-  const author = getAuthorId(API_URL, authorName);
-  const token = await getJwt(API_URL, author, password);
+  const token = await getAuthToken(API_URL, service, authorName);
 
   try {
     deleteTagRequest(API_URL, token, tagId);

@@ -7,13 +7,10 @@ const contentId = process.argv[5];
 
 const { deleteContent } = require("../lib/requests/deleteContent");
 const { invalidateCache } = require("../lib/requests/invalidateCaches");
-const { getAuthorId, getJwt } = require("../lib/requests/auth");
-const { getCredential } = require("../lib/getCredential.js");
+const { getAuthToken } = require("../lib/requests/auth");
 
 (async () => {
-  const password = getCredential(service, authorName);
-  const author = getAuthorId(API_URL, authorName);
-  const token = await getJwt(API_URL, author, password);
+  const token = await getAuthToken(API_URL, service, authorName);
 
   try {
     deleteContent(API_URL, token, contentId);

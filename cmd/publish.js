@@ -7,8 +7,7 @@ const { logInfo, logError } = require("../rust-lib/index.js");
 const { generatePayload } = require("../lib/contents/generator");
 const { postContent } = require("../lib/requests/postContent");
 const { invalidateCache } = require("../lib/requests/invalidateCaches");
-const { getAuthorId, getJwt } = require("../lib/requests/auth");
-const { getCredential } = require("../lib/getCredential.js");
+const { getAuthToken } = require("../lib/requests/auth");
 const { shouldSkipPaths, isValidImage } = require("../rust-lib/index.js");
 
 const API_URL = process.argv[2];
@@ -59,9 +58,7 @@ function copyAssetsIfValid(assets, dest) {
 }
 
 (async () => {
-  const password = getCredential(service, authorName);
-  const author = getAuthorId(API_URL, authorName);
-  const token = await getJwt(API_URL, author, password);
+  const token = await getAuthToken(API_URL, service, authorName);
 
   try {
     invalidateCache(API_URL, token);

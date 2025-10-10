@@ -6,15 +6,12 @@ const authorName = process.argv[4];
 const filePath = process.argv[5];
 
 const { invalidateCache } = require("../lib/requests/invalidateCaches");
-const { getAuthorId, getJwt } = require("../lib/requests/auth");
-const { getCredential } = require("../lib/getCredential.js");
+const { getAuthToken } = require("../lib/requests/auth");
 const { postSeries } = require("../lib/requests/postSeries");
 const fs = require("fs");
 
 (async () => {
-  const password = getCredential(service, authorName);
-  const author = getAuthorId(API_URL, authorName);
-  const token = await getJwt(API_URL, author, password);
+  const token = await getAuthToken(API_URL, service, authorName);
 
   try {
     const series = fs.readFileSync(filePath, "utf-8");
