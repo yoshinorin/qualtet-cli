@@ -17,9 +17,7 @@
   "dependencies": {
     "fs-extra": "11.3.0",
     "hexo": "8.0.0",
-    "hexo-util": "3.3.0",
-    "markdown-it": "14.1.0",
-    "markdown-it-footnote": "4.0.0"
+    "hexo-util": "3.3.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
