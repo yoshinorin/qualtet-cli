@@ -74,76 +74,72 @@ function copyAssetsIfValid(assets, dest) {
 
   const daysAgo = process.argv[5] ? process.argv[5] : 5;
 
+  async function processContents(
+    contents,
+    contentType,
+    url,
+    assetModel,
+    assetDestPath,
+    assetFilterFn,
+  ) {
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    let processedCount = 0;
+
+    for (let item of contents.toArray()) {
+      const content = generatePostContent(item, contentType, url);
+      if (content == null) {
+        continue;
+      }
+
+      try {
+        const response = await postContent(API_URL, token, content);
+        processedCount++;
+        const data = JSON.parse(response);
+        logInfo(`created - ${processedCount}: ${data.id} - ${data.path}`);
+
+        const assets = assetFilterFn(item, assetModel);
+        copyAssetsIfValid(assets, assetDestPath);
+      } catch (error) {
+        responseErrorHandler(item, error);
+      }
+
+      await wait(150);
+    }
+
+    return processedCount;
+  }
+
   let cnt = 0;
   hexo.init().then(() => {
-    hexo.load().then(() => {
+    hexo.load().then(async () => {
       let date = new Date();
       date = date.setDate(date.getDate() - daysAgo);
-      const wait = (ms) => new Promise((r) => setTimeout(r, ms));
       const postAsset = hexo.model("PostAsset");
       const pageAsset = hexo.model("Asset");
       const url = hexo.config.url;
 
-      (async () => {
-        const posts = hexo.locals.get("posts").filter((c) => c.updated > date);
-        for (let post of posts.toArray()) {
-          const content = generatePostContent(post, "article", url);
-          if (content == null) {
-            continue;
-          }
-          postContent(API_URL, token, content)
-            .then((response) => {
-              cnt++;
-              const data = JSON.parse(response);
-              logInfo(
-                `created - ${cnt}: ${data.id} - ${data.path}`,
-              );
-              return postAsset.find({ post: post._id }).toArray();
-            })
-            .then((assets) => {
-              copyAssetsIfValid(
-                assets,
-                join(hexo.base_dir, "_staticContentAssets", "articles"),
-              );
-            })
-            .catch((error) => {
-              responseErrorHandler(post, error);
-            });
-          await wait(150);
-        }
-      })();
+      const posts = hexo.locals.get("posts").filter((c) => c.updated > date);
+      cnt += await processContents(
+        posts,
+        "article",
+        url,
+        postAsset,
+        join(hexo.base_dir, "_staticContentAssets", "articles"),
+        (post, assetModel) => assetModel.find({ post: post._id }).toArray(),
+      );
 
-      // TODO: DRY
-      (async () => {
-        // TODO: excludes scaffolds
-        const pages = hexo.locals.get("pages").filter((c) => c.updated > date);
-        for (let page of pages.toArray()) {
-          const content = generatePostContent(page, "page", url);
-          if (content == null) {
-            continue;
-          }
-          postContent(API_URL, token, content)
-            .then((response) => {
-              cnt++;
-              const data = JSON.parse(response);
-              logInfo(
-                `created - ${cnt}: ${data.id} - ${data.path}`,
-              );
-              const pageDir = page.path.slice(0, page.path.lastIndexOf("/"));
-              return pageAsset.filter((x) => x._id.includes(pageDir));
-            })
-            .then((assets) => {
-              copyAssetsIfValid(
-                assets,
-                join(hexo.base_dir, "_staticContentAssets"),
-              );
-            })
-            .catch((error) => {
-              responseErrorHandler(page, error);
-            });
-          await wait(150);
-        }
-      })();
+      const pages = hexo.locals.get("pages").filter((c) => c.updated > date);
+      cnt += await processContents(
+        pages,
+        "page",
+        url,
+        pageAsset,
+        join(hexo.base_dir, "_staticContentAssets"),
+        (page, assetModel) => {
+          const pageDir = page.path.slice(0, page.path.lastIndexOf("/"));
+          return assetModel.filter((x) => x._id.includes(pageDir));
+        },
+      );
     });
   });
 })();
