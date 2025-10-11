@@ -27,7 +27,6 @@ static PARSER: LazyLock<MarkdownIt> = LazyLock::new(|| {
   parser
 });
 
-// WIP
 pub fn render(input: &str) -> String {
   let ast = PARSER.parse(input);
   ast.render()
