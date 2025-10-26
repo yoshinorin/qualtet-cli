@@ -15,6 +15,8 @@ pub async fn http_get(base_url: &str, path: &str, token: Option<&str>) -> Result
     .send()
     .await
     .map_err(|e| format!("HTTP GET request failed: {}", e))?
+    .error_for_status()
+    .map_err(|e| format!("HTTP GET failed with status: {}", e))?
     .text()
     .await
     .map_err(|e| format!("Failed to read response: {}", e))
@@ -42,6 +44,8 @@ pub async fn http_post(
     .send()
     .await
     .map_err(|e| format!("HTTP POST request failed: {}", e))?
+    .error_for_status()
+    .map_err(|e| format!("HTTP POST failed with status: {}", e))?
     .text()
     .await
     .map_err(|e| format!("Failed to read response: {}", e))
@@ -64,6 +68,8 @@ pub async fn http_delete(
     .send()
     .await
     .map_err(|e| format!("HTTP DELETE request failed: {}", e))?
+    .error_for_status()
+    .map_err(|e| format!("HTTP DELETE failed with status: {}", e))?
     .text()
     .await
     .map_err(|e| format!("Failed to read response: {}", e))
