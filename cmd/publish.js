@@ -40,15 +40,6 @@ function generatePostContent(content, type, baseUrl) {
   return generatedContent;
 }
 
-function responseErrorHandler(content, error) {
-  try {
-    logError(error.response.status.toString());
-    logError(`error: - ${content.path}`);
-  } catch {
-    // Nothing todo
-  }
-}
-
 function copyAssetsIfValid(assets, dest) {
   assets.forEach((a) => {
     if (isValidImage(a.source)) {
@@ -101,7 +92,7 @@ function copyAssetsIfValid(assets, dest) {
         const assets = assetFilterFn(item, assetModel);
         copyAssetsIfValid(assets, assetDestPath);
       } catch (error) {
-        responseErrorHandler(item, error);
+        logError(`${content.path} - ${error}`);
       }
 
       await wait(150);
