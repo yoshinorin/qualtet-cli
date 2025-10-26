@@ -27,8 +27,53 @@ static PARSER: LazyLock<MarkdownIt> = LazyLock::new(|| {
   parser
 });
 
+/// Preprocesses blockquotes to render consecutive blockquote lines as separate paragraphs.
+///
+/// This function inserts an empty blockquote line (">") between consecutive blockquote lines,
+/// causing the markdown parser to render each line as a separate paragraph within the same blockquote.
+///
+/// # Examples
+///
+/// ```
+/// // Input:
+/// // > Line 1
+/// // > Line 2
+///
+/// // After preprocessing:
+/// // > Line 1
+/// // >
+/// // > Line 2
+///
+/// // Rendered output:
+/// // <blockquote>
+/// // <p>Line 1</p>
+/// // <p>Line 2</p>
+/// // </blockquote>
+/// ```
+fn preprocess_blockquotes(input: &str) -> String {
+  let lines: Vec<&str> = input.lines().collect();
+  let mut result = Vec::new();
+  let mut prev_was_blockquote = false;
+
+  for line in lines {
+    let trimmed = line.trim_start();
+    let is_blockquote = trimmed.starts_with('>');
+    let is_empty_blockquote = trimmed == ">";
+
+    if is_blockquote && prev_was_blockquote && !is_empty_blockquote {
+      result.push(">");
+    }
+
+    result.push(line);
+    prev_was_blockquote = is_blockquote;
+  }
+
+  result.join("\n")
+}
+
 pub fn render(input: &str) -> String {
-  let ast = PARSER.parse(input);
+  let preprocessed = preprocess_blockquotes(input);
+  let ast = PARSER.parse(&preprocessed);
   ast.render()
 }
 
@@ -45,5 +90,35 @@ mod tests {
       output,
       "<p><img src=\"https://example.com/example.png\" alt=\"Rust\" loading=\"lazy\"></p>\n"
     );
+  }
+
+  #[test]
+  fn test_consecutive_blockquote_lines() {
+    let input = "> Line 1\n> Line 2\n> Line 3";
+    let output = render(input);
+
+    assert_eq!(
+      output,
+      "<blockquote>\n<p>Line 1</p>\n<p>Line 2</p>\n<p>Line 3</p>\n</blockquote>\n"
+    );
+  }
+
+  #[test]
+  fn test_blockquote_with_existing_blank_lines() {
+    let input = "> Line 1\n>\n> Line 2";
+    let output = render(input);
+
+    assert_eq!(
+      output,
+      "<blockquote>\n<p>Line 1</p>\n<p>Line 2</p>\n</blockquote>\n"
+    );
+  }
+
+  #[test]
+  fn test_single_blockquote_line() {
+    let input = "> Single line";
+    let output = render(input);
+
+    assert_eq!(output, "<blockquote>\n<p>Single line</p>\n</blockquote>\n");
   }
 }
