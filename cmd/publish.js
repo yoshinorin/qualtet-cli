@@ -16,9 +16,19 @@ const {
   service,
   authorName,
   "days-ago": daysAgo = "5",
+  "deploy-assets-dir": deployAssetsDir,
 } = parseCommonArgs({
   "days-ago": { type: "string", default: "5" },
+  // Directory path for storing assets to be deployed (e.g., via rsync).
+  // Actual deployment is not handled by this CLI - implement it separately using shell scripts, etc.
+  "deploy-assets-dir": { type: "string" },
 });
+
+// Validate required argument: deploy-assets-dir
+if (!deployAssetsDir) {
+  logError("Error: --deploy-assets-dir is required");
+  process.exit(1);
+}
 
 const SKIP_PATHS = [
   "temp/**",
@@ -116,7 +126,8 @@ function copyAssetsIfValid(assets, dest) {
         "article",
         url,
         postAsset,
-        join(hexo.base_dir, "_staticContentAssets", "articles"),
+        // Copy article assets to the directory for deployment
+        join(hexo.base_dir, deployAssetsDir, "articles"),
         (post, assetModel) => assetModel.find({ post: post._id }).toArray(),
       );
 
@@ -126,7 +137,8 @@ function copyAssetsIfValid(assets, dest) {
         "page",
         url,
         pageAsset,
-        join(hexo.base_dir, "_staticContentAssets"),
+        // Copy page assets to the directory for deployment
+        join(hexo.base_dir, deployAssetsDir),
         (page, assetModel) => {
           const pageDir = page.path.slice(0, page.path.lastIndexOf("/"));
           return assetModel.filter((x) => x._id.includes(pageDir));
