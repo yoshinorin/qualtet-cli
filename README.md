@@ -34,6 +34,7 @@ $ npm run build
 | `postSeriesFromFile` | Create/update series from JSON | `node ./cmd/postSeriesFromFile.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --file-path=<filePath>` |
 | `publish` | Publish updated articles | `node ./cmd/publish.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --days-ago=<daysAgo> --deploy-assets-dir=<deployAssetsDir>` |
 | `setCredential` | Set credential to keytar | `node ./cmd/setCredential.js` |
+| `watch` | Watch file changes and publish | `node ./cmd/watch.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --deploy-assets-dir=<deployAssetsDir>` |
 
 ### `assertImages`
 
@@ -126,6 +127,22 @@ Set credential to your keytar.
 ```sh
 $ node ./cmd/setCredential.js
 Please input serviceName, authorName, and author's password: <serviceName> <authorName> <password>
+```
+
+### `watch`
+
+Watch for file changes and automatically publish modified content to the API server.
+
+The `--deploy-assets-dir` option specifies the directory where assets will be stored for deployment (e.g., via rsync). The actual deployment process is not handled by this CLI and should be implemented separately using shell scripts or other tools.
+
+```sh
+$ node ./cmd/watch.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --deploy-assets-dir=<deployAssetsDir>
+INFO  API server is ready at http://localhost:9000
+INFO  caches: invalidated
+INFO  hexo initialized. Watching for file changes...
+INFO  watch mode started. files will be sent to API on change.
+INFO  file changed: source/_posts/example.md
+INFO  created - 1: 01gz702w32kxdhe8417fxcybcm - /example
 ```
 
 ## LICENSE
