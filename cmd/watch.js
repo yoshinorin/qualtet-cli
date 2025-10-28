@@ -41,11 +41,11 @@ async function handleFileUpdate(file) {
 
   // NOTE: Wait for Hexo to update its internal content cache
   await new Promise((resolve) => setTimeout(resolve, 500));
-  logInfo(`file changed: ${file.path}`);
+  logInfo(`File changed: ${file.path}`);
 
   const result = findByPath(hexo, file.path);
   if (!result) {
-    logInfo(`content not found for: ${file.path}`);
+    logInfo(`Content not found for: ${file.path}`);
     return;
   }
 
@@ -74,16 +74,16 @@ hexo.extend.processor.register("**/*.md", handleFileUpdate);
 
   try {
     invalidateCache(apiUrl, token);
-    logInfo(`caches: invalidated`);
+    logInfo(`Caches: invalidated`);
   } catch (err) {
     logError(err);
   }
 
   hexo.init().then(() => {
-    logInfo("hexo initialized. Watching for file changes...");
+    logInfo("Hexo initialized. Watching for file changes...");
     hexo.watch().then(() => {
       watching = true;
-      logInfo("watch mode started. files will be sent to API on change.");
+      logInfo("Watch mode started. Files will be sent to API on change.");
     });
   });
 })();

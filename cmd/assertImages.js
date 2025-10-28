@@ -11,7 +11,7 @@ const { values } = parseArgs({
 
 const daysAgo = values["days-ago"];
 
-logInfo(`check updated in ${daysAgo} days ago articles assets.`);
+logInfo(`Check updated in ${daysAgo} days ago articles assets.`);
 
 function assertImages(assets) {
   assets.forEach((a) => {

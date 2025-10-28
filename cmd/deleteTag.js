@@ -19,7 +19,7 @@ const {
   try {
     deleteTagRequest(apiUrl, token, tagId);
     invalidateCache(apiUrl, token);
-    logInfo(`caches: invalidated`);
+    logInfo(`Caches: invalidated`);
   } catch (err) {
     logError(err);
   } finally {

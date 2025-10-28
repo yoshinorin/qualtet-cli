@@ -10,7 +10,7 @@ const { apiUrl, service, authorName } = parseCommonArgs();
 
   try {
     invalidateCache(apiUrl, token);
-    logInfo(`caches: invalidated`);
+    logInfo(`Caches: invalidated`);
   } catch (err) {
     logError(err);
   } finally {

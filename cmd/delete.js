@@ -19,7 +19,7 @@ const {
   try {
     deleteContent(apiUrl, token, contentId);
     invalidateCache(apiUrl, token);
-    logInfo(`caches: invalidated`);
+    logInfo(`Caches: invalidated`);
   } catch (err) {
     logError(err);
   } finally {
