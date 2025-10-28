@@ -1,14 +1,13 @@
 const Hexo = require("hexo");
 const hexo = new Hexo(process.cwd(), { silent: false });
-const fs = require("fs-extra");
 const { join } = require("path");
 const { logInfo, logError } = require("../rust-lib/index.js");
 
-const { generatePayload } = require("../lib/contents/generator");
+const { generatePostContent } = require("../lib/contents/utils");
+const { copyAssetsIfValid } = require("../lib/assets/utils");
 const { postContent } = require("../lib/requests/postContent");
 const { invalidateCache } = require("../lib/requests/invalidateCaches");
 const { getAuthToken } = require("../lib/requests/auth");
-const { shouldSkipPaths, isValidImage } = require("../rust-lib/index.js");
 const { parseCommonArgs } = require("../lib/parseCommonArgs");
 
 const {
@@ -28,40 +27,6 @@ const {
 if (!deployAssetsDir) {
   logError("Error: --deploy-assets-dir is required");
   process.exit(1);
-}
-
-const SKIP_PATHS = [
-  "temp/**",
-  "all-categories/**",
-  "all-archives/**",
-  "scaffolds/**",
-  "404/**",
-  "_drafts/**",
-];
-
-function generatePostContent(content, type, baseUrl) {
-  if (shouldSkipPaths(content.path, SKIP_PATHS)) {
-    return null;
-  }
-  const generatedContent = generatePayload(content, type, baseUrl);
-  if (!generatedContent) {
-    return null;
-  }
-  return generatedContent;
-}
-
-function copyAssetsIfValid(assets, dest) {
-  assets.forEach((a) => {
-    if (isValidImage(a.source)) {
-      fs.copy(a.source, join(dest, a.path), (err) => {
-        if (err) {
-          logError(err);
-        }
-      });
-    } else {
-      logError(`image copy skipped - : ${a.path}`);
-    }
-  });
 }
 
 (async () => {
