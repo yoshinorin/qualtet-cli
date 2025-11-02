@@ -10,6 +10,14 @@ export declare function getCredential(serviceName: string, authorName: string): 
 
 export declare function getLogLevel(): string
 
+export declare function highlightCode(code: string, options: HighlightOptions): string
+
+export interface HighlightOptions {
+  lang?: string
+  caption?: string
+  firstLine?: number
+}
+
 export declare function httpDelete(baseUrl: string, path: string, token?: string | undefined | null): Promise<string>
 
 export declare function httpGet(baseUrl: string, path: string, token?: string | undefined | null): Promise<string>

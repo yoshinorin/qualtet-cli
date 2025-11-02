@@ -580,6 +580,7 @@ module.exports.formatPath = nativeBinding.formatPath
 module.exports.generateRobots = nativeBinding.generateRobots
 module.exports.getCredential = nativeBinding.getCredential
 module.exports.getLogLevel = nativeBinding.getLogLevel
+module.exports.highlightCode = nativeBinding.highlightCode
 module.exports.httpDelete = nativeBinding.httpDelete
 module.exports.httpGet = nativeBinding.httpGet
 module.exports.httpPost = nativeBinding.httpPost

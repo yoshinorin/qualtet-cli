@@ -1,5 +1,6 @@
 mod credential;
 mod external_link;
+mod highlight;
 mod http_client;
 mod image_validator;
 mod logger;
@@ -138,6 +139,23 @@ pub async fn http_delete(
   http_client::http_delete(&base_url, &path, token.as_deref())
     .await
     .map_err(|e| napi::Error::from_reason(e))
+}
+
+#[napi(object)]
+pub struct HighlightOptions {
+  pub lang: Option<String>,
+  pub caption: Option<String>,
+  pub first_line: Option<i32>,
+}
+
+#[napi]
+pub fn highlight_code(code: String, options: HighlightOptions) -> napi::Result<String> {
+  let opts = highlight::HighlightOptions {
+    lang: options.lang,
+    caption: options.caption,
+    first_line: options.first_line.unwrap_or(1),
+  };
+  Ok(highlight::highlight(&code, opts))
 }
 
 #[napi]
