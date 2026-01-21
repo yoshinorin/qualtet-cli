@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use reqwest::Client;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE, HeaderMap, HeaderValue};
 use serde_json::Value;
@@ -14,7 +16,7 @@ pub async fn http_get(base_url: &str, path: &str, token: Option<&str>) -> Result
     .get(&url)
     .send()
     .await
-    .map_err(|e| format!("HTTP GET request failed: {}", e))?
+    .map_err(|e| format!("HTTP GET request failed: {} (source: {:?})", e, e.source()))?
     .error_for_status()
     .map_err(|e| format!("HTTP GET failed with status: {}", e))?
     .text()
@@ -43,7 +45,7 @@ pub async fn http_post(
     .json(&json_data)
     .send()
     .await
-    .map_err(|e| format!("HTTP POST request failed: {}", e))?
+    .map_err(|e| format!("HTTP POST request failed: {} (source: {:?})", e, e.source()))?
     .error_for_status()
     .map_err(|e| format!("HTTP POST failed with status: {}", e))?
     .text()
@@ -67,7 +69,13 @@ pub async fn http_delete(
     .delete(&url)
     .send()
     .await
-    .map_err(|e| format!("HTTP DELETE request failed: {}", e))?
+    .map_err(|e| {
+      format!(
+        "HTTP DELETE request failed: {} (source: {:?})",
+        e,
+        e.source()
+      )
+    })?
     .error_for_status()
     .map_err(|e| format!("HTTP DELETE failed with status: {}", e))?
     .text()
