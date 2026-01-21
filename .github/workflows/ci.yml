@@ -11,6 +11,9 @@ jobs:
   build_and_test:
     runs-on: ${{ matrix.target.os }}
     timeout-minutes: 360
+    permissions:
+      contents: read
+      pages: write
     strategy:
       matrix:
         target:
