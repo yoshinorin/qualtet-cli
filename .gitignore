@@ -1,3 +1,4 @@
 **/node_modules/**
 report/
 .claude/settings.local.json
+rust-lib/src/target/*
