@@ -34,7 +34,7 @@ $ npm run build
 | `postSeriesFromFile` | Create/update series from JSON | `node ./cmd/postSeriesFromFile.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --file-path=<filePath>` |
 | `publish` | Publish updated articles | `node ./cmd/publish.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --days-ago=<daysAgo> --deploy-assets-dir=<deployAssetsDir>` |
 | `setCredential` | Set credential to keytar | `node ./cmd/setCredential.js` |
-| `watch` | Watch file changes and publish | `node ./cmd/watch.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --deploy-assets-dir=<deployAssetsDir>` |
+| `watch` | Watch file changes and publish | `node ./cmd/watch.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --deploy-assets-dir=<deployAssetsDir> --reload-url=<reloadUrl>` |
 
 ### `assertImages`
 
@@ -135,8 +135,10 @@ Watch for file changes and automatically publish modified content to the API ser
 
 The `--deploy-assets-dir` option specifies the directory where assets will be stored for deployment (e.g., via rsync). The actual deployment process is not handled by this CLI and should be implemented separately using shell scripts or other tools.
 
+The `--reload-url` option specifies the URL to send a GET request to after publishing content, intended for triggering a reload of the dev server (e.g., Next.js). If not specified, the reload request is skipped.
+
 ```sh
-$ node ./cmd/watch.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --deploy-assets-dir=<deployAssetsDir>
+$ node ./cmd/watch.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --deploy-assets-dir=<deployAssetsDir> --reload-url=<reloadUrl>
 INFO  API server is ready at http://localhost:9000
 INFO  caches: invalidated
 INFO  hexo initialized. Watching for file changes...

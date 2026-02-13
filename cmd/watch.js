@@ -15,10 +15,12 @@ const {
   service,
   authorName,
   "deploy-assets-dir": deployAssetsDir,
+  "reload-url": reloadUrl,
 } = parseCommonArgs({
   // Directory path for storing assets to be deployed (e.g., via rsync).
   // Actual deployment is not handled by this CLI - implement it separately using shell scripts, etc.
   "deploy-assets-dir": { type: "string" },
+  "reload-url": { type: "string" },
 });
 
 // Validate required argument: deploy-assets-dir
@@ -56,6 +58,16 @@ async function handleFileUpdate(file) {
     token,
     baseUrl: hexo.config.url,
   });
+  if (reloadUrl) {
+    fetch(reloadUrl)
+      .then(async (res) => {
+        const body = await res.text();
+        logInfo(`GET ${reloadUrl} - ${res.status}: ${body}`);
+      })
+      .catch((err) => {
+        logError(`Failed to send GET request to ${reloadUrl}: ${err.message}`);
+      });
+  }
   if (data) {
     copyContentAssets(item, {
       contentType,
