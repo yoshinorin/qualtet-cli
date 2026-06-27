@@ -22,13 +22,13 @@ exif = { package = "kamadak-exif", version = "0.6.1" }
 regex = "1.12.3"
 url = "2.5.8"
 serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.149"
-reqwest = { version = "0.13.3", features = ["json"] }
-tokio = { version = "1.49.0", features = ["rt-multi-thread"] }
+serde_json = "1.0.150"
+reqwest = { version = "0.13.4", features = ["json"] }
+tokio = { version = "1.52.3", features = ["rt-multi-thread"] }
 syntect = { version = "5.3.0", default-features = true }
 
 [build-dependencies]
-napi-build = "2.3.1"
+napi-build = "2.3.2"
 
 [profile.release]
 lto = true
