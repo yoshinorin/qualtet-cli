@@ -46,7 +46,7 @@ pub enum SkipReason {
 }
 
 const SKIP_EXTENSIONS: &[&str] = &[
-  ".md", ".mermaid", ".mp3", ".mp4", ".webm", ".pptx", ".svg", ".txt", ".ico",
+  ".md", ".mermaid", ".mp3", ".mp4", ".webm", ".pptx", ".svg", ".txt", ".ico",".gif"
 ];
 
 const GPS_TAGS: &[exif::Tag] = &[
