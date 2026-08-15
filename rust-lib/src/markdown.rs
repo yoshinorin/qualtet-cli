@@ -3,6 +3,7 @@ use std::sync::LazyLock;
 use markdown_it::MarkdownIt;
 use markdown_it_footnote;
 use markdown_it_lazyload;
+use markdown_it_image_caption;
 
 static PARSER: LazyLock<MarkdownIt> = LazyLock::new(|| {
   let mut parser = markdown_it::MarkdownIt::new();
@@ -23,6 +24,7 @@ static PARSER: LazyLock<MarkdownIt> = LazyLock::new(|| {
   markdown_it_footnote::back_refs::add(&mut parser);
 
   markdown_it_lazyload::add(&mut parser);
+  markdown_it_image_caption::add(&mut parser);
 
   parser
 });

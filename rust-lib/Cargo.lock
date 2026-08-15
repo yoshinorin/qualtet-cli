@@ -1083,10 +1083,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "markdown-it-lazyload"
-version = "0.1.1"
+name = "markdown-it-image-caption"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "611a03a709239a9006b41b7070aed5e9bc645f4467f7c595c597776e5b7d8e50"
+checksum = "0d930613f67d66920eed2e5518cab46171bfdc5a657359387403375a57e1b3c7"
+dependencies = [
+ "markdown-it",
+]
+
+[[package]]
+name = "markdown-it-lazyload"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "02fb3cdedfc3b3f6a8132bbfe8e37167a1c4ec623d9bed424bf001815c6faf88"
 dependencies = [
  "markdown-it",
 ]
@@ -1564,6 +1573,7 @@ dependencies = [
  "log",
  "markdown-it",
  "markdown-it-footnote",
+ "markdown-it-image-caption",
  "markdown-it-lazyload",
  "napi",
  "napi-build",
