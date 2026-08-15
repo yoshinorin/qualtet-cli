@@ -18,7 +18,7 @@ log = "0.4.29"
 colored = "3.1.1"
 markdown-it-footnote = "0.2.0"
 markdown-it-lazyload = "1.0.0"
-markdown-it-image-caption = "0.1.0"
+markdown-it-image-caption = "1.0.0"
 exif = { package = "kamadak-exif", version = "0.6.1" }
 regex = "1.12.3"
 url = "2.5.8"

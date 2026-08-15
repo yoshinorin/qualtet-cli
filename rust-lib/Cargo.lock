@@ -1084,9 +1084,9 @@ dependencies = [
 
 [[package]]
 name = "markdown-it-image-caption"
-version = "0.1.0"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d930613f67d66920eed2e5518cab46171bfdc5a657359387403375a57e1b3c7"
+checksum = "3fb972480d3a2d0f332d280f762596e4a569fd7cd481fb3fb60616e00bc0efc4"
 dependencies = [
  "markdown-it",
 ]
