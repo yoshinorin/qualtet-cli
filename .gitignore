@@ -2,3 +2,5 @@
 report/
 .claude/settings.local.json
 rust-lib/src/target/*
+embedding-models/*
+!embedding-models/README.md
