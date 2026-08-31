@@ -13,16 +13,20 @@ const {
   service,
   authorName,
   "days-ago": daysAgo = "5",
+  "skip-deploy-assets": skipDeployAssets = false,
   "deploy-assets-dir": deployAssetsDir,
 } = parseCommonArgs({
   "days-ago": { type: "string", default: "5" },
+  "skip-deploy-assets": { type: "boolean", default: false },
   // Directory path for storing assets to be deployed (e.g., via rsync).
   // Actual deployment is not handled by this CLI - implement it separately using shell scripts, etc.
   "deploy-assets-dir": { type: "string" },
 });
 
+const deployAssets = !skipDeployAssets;
+
 // Validate required argument: deploy-assets-dir
-if (!deployAssetsDir) {
+if (deployAssets && !deployAssetsDir) {
   logError("Error: --deploy-assets-dir is required");
   process.exit(1);
 }
@@ -51,7 +55,7 @@ if (!deployAssetsDir) {
           token,
           baseUrl: url,
         });
-        if (data) {
+        if (deployAssets && data) {
           copyContentAssets(item, {
             contentType,
             deployAssetsDir,

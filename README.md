@@ -32,7 +32,7 @@ $ npm run build
 | `deleteTag` | Delete tag by ID | `node ./cmd/deleteTag.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --tag-id=<tagId>` |
 | `invalidateCaches` | Invalidate cache | `node ./cmd/invalidateCaches.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName>` |
 | `postSeriesFromFile` | Create/update series from JSON | `node ./cmd/postSeriesFromFile.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --file-path=<filePath>` |
-| `publish` | Publish updated articles | `node ./cmd/publish.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --days-ago=<daysAgo> --deploy-assets-dir=<deployAssetsDir>` |
+| `publish` | Publish updated articles | `node ./cmd/publish.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --days-ago=<daysAgo> --deploy-assets-dir=<deployAssetsDir> [--skip-deploy-assets]` |
 | `setCredential` | Set credential to keytar | `node ./cmd/setCredential.js` |
 | `watch` | Watch file changes and publish | `node ./cmd/watch.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --deploy-assets-dir=<deployAssetsDir> --reload-url=<reloadUrl>` |
 
@@ -108,6 +108,8 @@ $ node ./cmd/postSeriesFromFile.js --api-url=<apiUrl> --service=<serviceName> --
 Publish articles (posts or pages) that have been updated up to n days ago.
 
 The `--deploy-assets-dir` option specifies the directory where assets will be stored for deployment (e.g., via rsync). The actual deployment process is not handled by this CLI and should be implemented separately using shell scripts or other tools.
+
+The `--skip-deploy-assets` flag skips copying content assets to `--deploy-assets-dir` entirely. When set, `--deploy-assets-dir` is not required.
 
 ```sh
 $ node ./cmd/publish.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --days-ago=<daysAgo> --deploy-assets-dir=<deployAssetsDir>
