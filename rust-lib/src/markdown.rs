@@ -2,8 +2,8 @@ use std::sync::LazyLock;
 
 use markdown_it::MarkdownIt;
 use markdown_it_footnote;
-use markdown_it_lazyload;
 use markdown_it_image_figure;
+use markdown_it_lazyload;
 
 static PARSER: LazyLock<MarkdownIt> = LazyLock::new(|| {
   let mut parser = markdown_it::MarkdownIt::new();
