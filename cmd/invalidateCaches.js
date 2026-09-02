@@ -12,7 +12,7 @@ const { apiUrl, service, authorName } = parseCommonArgs();
     invalidateCache(apiUrl, token);
     logInfo(`Caches: invalidated`);
   } catch (err) {
-    logError(err);
+    logError(err.toString());
   } finally {
     // Nothing todo
   }

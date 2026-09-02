@@ -88,7 +88,7 @@ hexo.extend.processor.register("**/*.md", handleFileUpdate);
     invalidateCache(apiUrl, token);
     logInfo(`Caches: invalidated`);
   } catch (err) {
-    logError(err);
+    logError(err.toString());
   }
 
   hexo.init().then(() => {
