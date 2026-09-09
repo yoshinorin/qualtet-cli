@@ -41,44 +41,49 @@ async function handleFileUpdate(file) {
     return;
   }
 
-  // NOTE: Wait for Hexo to update its internal content cache
-  await new Promise((resolve) => setTimeout(resolve, 500));
   logInfo(`File changed: ${file.path}`);
 
-  const result = findByPath(hexo, file.path);
-  if (!result) {
-    logInfo(`Content not found for: ${file.path}`);
-    return;
-  }
+  // NOTE: Never let this function reject. Hexo runs processors sequentially via
+  // `Bluebird.reduce`, so a rejection aborts the chain and Hexo's built-in
+  // processors never refresh the in-memory DB that `findByPath` reads, freezing
+  // the content until the process is restarted.
+  try {
+    const result = findByPath(hexo, file.path);
+    if (!result) {
+      logInfo(`Content not found for: ${file.path}`);
+      return;
+    }
 
-  const { item, contentType } = result;
-  const data = await publish(item, {
-    contentType,
-    apiUrl,
-    token,
-    baseUrl: hexo.config.url,
-  });
-  if (reloadUrl) {
-    fetch(reloadUrl)
-      .then(async (res) => {
-        const body = await res.text();
-        logInfo(`GET ${reloadUrl} - ${res.status}: ${body}`);
-      })
-      .catch((err) => {
-        logError(`Failed to send GET request to ${reloadUrl}: ${err.message}`);
-      });
-  }
-  if (data) {
-    copyContentAssets(item, {
+    const { item, contentType } = result;
+    const data = await publish(item, {
       contentType,
-      deployAssetsDir,
-      hexo,
+      apiUrl,
+      token,
+      baseUrl: hexo.config.url,
     });
+    if (reloadUrl) {
+      fetch(reloadUrl)
+        .then(async (res) => {
+          const body = await res.text();
+          logInfo(`GET ${reloadUrl} - ${res.status}: ${body}`);
+        })
+        .catch((err) => {
+          logError(
+            `Failed to send GET request to ${reloadUrl}: ${err.message}`,
+          );
+        });
+    }
+    if (data) {
+      copyContentAssets(item, {
+        contentType,
+        deployAssetsDir,
+        hexo,
+      });
+    }
+  } catch (err) {
+    logError(`Failed to handle file update: ${file.path} - ${err}`);
   }
 }
-
-// Register processor BEFORE hexo.init()
-hexo.extend.processor.register("**/*.md", handleFileUpdate);
 
 (async () => {
   await waitForApiServerReady(apiUrl, 120);
@@ -91,11 +96,17 @@ hexo.extend.processor.register("**/*.md", handleFileUpdate);
     logError(err.toString());
   }
 
-  hexo.init().then(() => {
-    logInfo("Hexo initialized. Watching for file changes...");
-    hexo.watch().then(() => {
-      watching = true;
-      logInfo("Watch mode started. Files will be sent to API on change.");
-    });
-  });
+  await hexo.init();
+
+  // NOTE: Register the processor AFTER hexo.init(). Hexo executes processors in
+  // registration order, and its built-in `post`/`page` processors - which update
+  // the in-memory DB that `findByPath` reads - are registered during init().
+  // Registering earlier makes this processor run first and publish the content
+  // of the previous save.
+  hexo.extend.processor.register("**/*.md", handleFileUpdate);
+  logInfo("Hexo initialized. Watching for file changes...");
+
+  await hexo.watch();
+  watching = true;
+  logInfo("Watch mode started. Files will be sent to API on change.");
 })();
