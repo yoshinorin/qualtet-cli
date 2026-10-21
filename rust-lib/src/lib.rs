@@ -108,6 +108,17 @@ pub fn get_log_level() -> napi::Result<String> {
 }
 
 #[napi]
+pub fn set_ipv4_only(enabled: bool) -> napi::Result<()> {
+  http_client::set_ipv4_only(enabled);
+  Ok(())
+}
+
+#[napi]
+pub fn is_ipv4_only() -> napi::Result<bool> {
+  Ok(http_client::is_ipv4_only())
+}
+
+#[napi]
 pub async fn http_get(
   base_url: String,
   path: String,

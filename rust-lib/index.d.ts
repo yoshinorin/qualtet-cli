@@ -24,6 +24,8 @@ export declare function httpGet(baseUrl: string, path: string, token?: string | 
 
 export declare function httpPost(baseUrl: string, path: string, data: string, token?: string | undefined | null): Promise<string>
 
+export declare function isIpv4Only(): boolean
+
 export declare function isValidImage(source: string): boolean
 
 export declare function logDebug(message: string): void
@@ -39,6 +41,8 @@ export declare function removeTemplateEnginesSyntax(text: string): string
 export declare function renderMarkdown(input: string): string
 
 export declare function setCredential(serviceName: string, authorName: string, password: string): void
+
+export declare function setIpv4Only(enabled: boolean): void
 
 export declare function setLogLevel(level: string): void
 

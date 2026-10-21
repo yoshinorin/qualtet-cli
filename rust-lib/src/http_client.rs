@@ -1,8 +1,20 @@
 use std::error::Error;
+use std::net::{IpAddr, Ipv4Addr};
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use reqwest::Client;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE, HeaderMap, HeaderValue};
 use serde_json::Value;
+
+static IPV4_ONLY: AtomicBool = AtomicBool::new(false);
+
+pub fn set_ipv4_only(enabled: bool) {
+  IPV4_ONLY.store(enabled, Ordering::Relaxed);
+}
+
+pub fn is_ipv4_only() -> bool {
+  IPV4_ONLY.load(Ordering::Relaxed)
+}
 
 pub async fn http_get(base_url: &str, path: &str, token: Option<&str>) -> Result<String, String> {
   let client = create_client(token)?;
@@ -109,8 +121,29 @@ fn create_client(token: Option<&str>) -> Result<Client, String> {
     );
   }
 
-  Client::builder()
-    .default_headers(headers)
+  let mut builder = Client::builder().default_headers(headers);
+  if is_ipv4_only() {
+    // Binding to 0.0.0.0 restricts connections to IPv4
+    builder = builder.local_address(IpAddr::V4(Ipv4Addr::UNSPECIFIED));
+  }
+
+  builder
     .build()
     .map_err(|e| format!("Failed to create HTTP client: {}", e))
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_set_ipv4_only() {
+    set_ipv4_only(true);
+    assert!(is_ipv4_only());
+    assert!(create_client(Some("token")).is_ok());
+
+    set_ipv4_only(false);
+    assert!(!is_ipv4_only());
+    assert!(create_client(None).is_ok());
+  }
 }

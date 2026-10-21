@@ -36,6 +36,8 @@ $ npm run build
 | `setCredential` | Set credential to keytar | `node ./cmd/setCredential.js` |
 | `watch` | Watch file changes and publish | `node ./cmd/watch.js --api-url=<apiUrl> --service=<serviceName> --author=<authorName> --deploy-assets-dir=<deployAssetsDir> --reload-url=<reloadUrl>` |
 
+Commands that accept `--api-url` also accept `--ipv4` to force API requests over IPv4.
+
 ### `assertImages`
 
 Validate an image has EXIF(includes GPS) info or not.
