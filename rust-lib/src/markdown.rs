@@ -90,7 +90,7 @@ mod tests {
 
     assert_eq!(
       output,
-      "<p><img src=\"https://example.com/example.png\" alt=\"Rust\" loading=\"lazy\"></p>\n"
+      "<figure><img loading=\"lazy\" src=\"https://example.com/example.png\" alt=\"Rust\"><figcaption>Rust</figcaption></figure>\n"
     );
   }
 

@@ -316,9 +316,14 @@ mod tests {
   fn test_unsupported_image_formats() {
     // These should return ValidationResult indicating valid (no GPS found) or error
     // since these files don't exist, they should return an error
-    assert!(is_valid("test.gif").is_err());
     assert!(is_valid("test.bmp").is_err());
-    // .ico is in SKIP_EXTENSIONS, so it should be skipped
+    // .ico and .gif are in SKIP_EXTENSIONS, so they should be skipped
+    match is_valid("test.gif").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .gif file"),
+    }
     match is_valid("test.ico").unwrap() {
       ValidationResult::Skipped {
         reason: SkipReason::SkippedExtension,
@@ -327,8 +332,13 @@ mod tests {
     }
 
     // Test case insensitive
-    assert!(is_valid("test.GIF").is_err());
     assert!(is_valid("test.BMP").is_err());
+    match is_valid("test.GIF").unwrap() {
+      ValidationResult::Skipped {
+        reason: SkipReason::SkippedExtension,
+      } => {}
+      _ => panic!("Expected Skipped result for .GIF file"),
+    }
     match is_valid("test.ICO").unwrap() {
       ValidationResult::Skipped {
         reason: SkipReason::SkippedExtension,
