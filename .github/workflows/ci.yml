@@ -28,8 +28,8 @@ jobs:
       - name: Set up rust
         run: |
           cd rust-lib
-          rustup toolchain install 1.90.0 --profile minimal --no-self-update
-          rustup default 1.90.0-${{ matrix.target.triple }}
+          rustup toolchain install 1.99.1 --profile minimal --no-self-update
+          rustup default 1.99.1-${{ matrix.target.triple }}
           rustup --version
           rustc --version
           cargo --version
