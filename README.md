@@ -6,7 +6,7 @@ The cli for [Qualtet](https://github.com/yoshinorin/qualtet). A set of wrappers 
 
 ## Requirements
 
-* Node.js 24.x
+* Node.js 26.x
 * rustup 1.29.x
 * rustc 1.99.x
 
